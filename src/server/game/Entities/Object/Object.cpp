@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
@@ -2526,6 +2526,10 @@ bool WorldObject::canSeeOrDetect(WorldObject const* obj, bool ignoreStealth, boo
 {
     if (this == obj || m_Teleports && obj->m_Teleports)
         return true;
+	uint32 objEntry = obj->GetEntry();
+	uint32 guidLow = obj->GetGUIDLow();
+	uint32 guidHigh = obj->GetGUIDHigh();
+
 
     if (GetGUID().IsPlayer())
     {
@@ -3939,10 +3943,10 @@ ObjectGuid WorldObject::GetTransGUID() const
     return ObjectGuid::Empty;
 }
 
-//! if someone has phaseID but enother has empty - not see any! YES! NOT SEE! FIX2. WHY SHOULD? 
+//! if someone has phaseID but another has empty - not see any! YES! NOT SEE! FIX2. WHY SHOULD? 
 //      FOR SUPPORT OLD STYLE NEED ALLOW TO SEE. FOR SUPER HIDE PHASE ALL SHOULD HAVE SOME PHASEIDs
-//! If some have 1 2 enother has 1 = see each other.
-//! ir some have 1 2 enorther has 3 - not see.
+//! If some have 1 2 another has 1 = see each other.
+//! ir some have 1 2 another has 3 - not see.
 //! if some has ignorePhase id - see each.
 bool WorldObject::InSamePhaseId(std::set<uint32> const& phase, bool otherUsePlayerPhasingRules) const
 {
@@ -3957,11 +3961,12 @@ bool WorldObject::InSamePhaseId(std::set<uint32> const& phase, bool otherUsePlay
     if (phase.empty() && m_phaseId.empty())
         return true;
 
-    if (usePlayerPhasingRules && phase.empty())
-        return true;
+	// FIXME: 以下的两个判断会导致看到不改看的object
+    //if (usePlayerPhasingRules && phase.empty())
+    //    return true;
 
-    if (otherUsePlayerPhasingRules && m_phaseId.empty())
-        return true;
+    //if (otherUsePlayerPhasingRules && m_phaseId.empty())
+    //    return true;
 
     //! speed up case. should be done in any way. 
     // As iteration not check empty data but it should be done.

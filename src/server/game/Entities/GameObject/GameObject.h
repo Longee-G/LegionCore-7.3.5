@@ -141,7 +141,7 @@ class GameObject : public WorldObject, public GridObject<GameObject>, public Map
         const char* GetNameForLocaleIdx(LocaleConstant locale_idx) const override;
 
         void SaveToDB();
-        void SaveToDB(uint32 mapid, uint64 spawnMask, uint32 phaseMask);
+        void SaveToDB(uint32 mapid, uint64 spawnMask, uint32 phaseMask, Uint32Set const& phaseId);
         bool LoadFromDB(ObjectGuid::LowType guid, Map* map);
         bool LoadGameObjectFromDB(ObjectGuid::LowType guid, Map* map, bool addToMap = true);
         void DeleteFromDB();

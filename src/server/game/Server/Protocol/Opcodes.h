@@ -88,6 +88,7 @@ enum OpcodeClient : uint16
     CMSG_AUTOSTORE_BANK_ITEM                                = 0x3997,
     CMSG_AUTOSTORE_BANK_REAGENT                             = 0x3999,
     CMSG_BANKER_ACTIVATE                                    = 0x34B6,
+
     CMSG_BATTLE_PAY_ACK_FAILED_RESPONSE                     = 0x36CA,
     CMSG_BATTLE_PAY_CONFIRM_PURCHASE_RESPONSE               = 0x36C9,
     CMSG_BATTLE_PAY_DISTRIBUTION_ASSIGN_TO_TARGET           = 0x36C0,
@@ -105,6 +106,7 @@ enum OpcodeClient : uint16
     CMSG_BATTLE_PAY_PURCHASE_DETAILS_RESPONSE               = 0x370B,
     CMSG_BATTLE_PAY_PURCHASE_UNK_RESPONSE                   = 0x370D,
     CMSG_BATTLE_PAY_VALIDATE_BNET_VAS_TRANSFER              = 0x370A,
+
     CMSG_BATTLE_PET_CLEAR_FANFARE                           = 0x312C,
     CMSG_BATTLE_PET_DELETE_PET                              = 0x3624,
     CMSG_BATTLE_PET_DELETE_PET_CHEAT                        = 0x3625,
@@ -839,6 +841,7 @@ enum OpcodeServer : uint16
     SMSG_AVAILABLE_HOTFIXES                                 = 0x25A1,
     SMSG_BAN_REASON                                         = 0x26B2,
     SMSG_BARBER_SHOP_RESULT                                 = 0x26E8,
+
     SMSG_BATTLE_PAY_ACK_FAILED                              = 0x27C6,
     SMSG_BATTLE_PAY_PURCHASE_DETAILS                        = 0x2861,
     SMSG_BATTLE_PAY_PURCHASE_UNK                            = 0x285D,
@@ -864,6 +867,8 @@ enum OpcodeServer : uint16
     SMSG_BATTLE_PAY_VAS_PURCHASE_STARTED                    = 0x2832,
     SMSG_BATTLE_PAY_VAS_REALM_LIST                          = 0x2831,
     SMSG_BATTLE_PAY_VAS_TRANSFER_QUEUE_STATUS               = 0x2858,
+	SMSG_BATTLE_PAY_UNK = 0x285F,
+
     SMSG_BATTLE_PET_CAGE_DATE_ERROR                         = 0x26A0,
     SMSG_BATTLE_PET_DELETED                                 = 0x2606,
     SMSG_BATTLE_PET_ERROR                                   = 0x2655,

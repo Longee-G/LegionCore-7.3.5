@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
@@ -638,7 +638,7 @@ bool Player::Create(ObjectGuid::LowType guidlow, WorldPackets::Character::Charac
 
     WorldLocation loc(info->mapId, info->positionX, info->positionY, info->positionZ, info->orientation);
 
-    bool loadoutItem = false;
+    bool hasLoadoutItem = false;
     bool addArtifact = true;
     uint32 itemIlevel = 0;
     auto charTemplate = static_cast<CharacterTemplate const*>(nullptr);
@@ -654,7 +654,7 @@ bool Player::Create(ObjectGuid::LowType guidlow, WorldPackets::Character::Charac
                     money = charTemplateData->money;
                     itemIlevel = charTemplateData->iLevel;
                     if (createInfo->Class != CLASS_DEMON_HUNTER)
-                        loadoutItem = true;
+                        hasLoadoutItem = true;
                     addArtifact = charTemplateData->artifact;
                     charTemplateData->active = false;
 
@@ -876,7 +876,7 @@ bool Player::Create(ObjectGuid::LowType guidlow, WorldPackets::Character::Charac
                 }
             }
     }
-    else if (loadoutItem)
+    else if (hasLoadoutItem)
     {
         std::array<std::vector<uint32>, 2> itemsArray = sDB2Manager.GetItemLoadOutItemsByClassID(getClass(), 4);
         for (uint32 itemID : itemsArray[0])
@@ -2361,13 +2361,13 @@ bool Player::SafeTeleport(uint32 mapid, float x, float y, float z, float orienta
                     {
                     case 1460: // Hack for broken Island scenario.
                         transferPending.Ship = boost::in_place();
-                        transferPending.Ship->ID = GetTeam() == ALLIANCE ? 251513 : 254124;
+                        transferPending.Ship->ID = GetTeam() == ALLIANCE ? 251513 : 254124;		// 地图中战船go的Entry
                         transferPending.Ship->OriginMapID = GetMapId();
 
                         transferPending.TransferSpellID = boost::in_place();
-                        transferPending.TransferSpellID = GetTeam() == ALLIANCE ? 217273 : 225143;
+                        transferPending.TransferSpellID = GetTeam() == ALLIANCE ? 217273 : 225143;	// 这个spell:225143  `进入破碎海滩-部落`
 
-                        SendDirectMessage(WorldPackets::Misc::CustomLoadScreen(GetTeam() == ALLIANCE ? 217273 : 225143, 0).Write());
+                        //SendDirectMessage(WorldPackets::Misc::CustomLoadScreen(GetTeam() == ALLIANCE ? 217273 : 225143, 0).Write());
                         break;
                     case 1803: // Hack for Seehing shore battleground
                     {
@@ -37677,6 +37677,8 @@ void Player::UpdateBattlePetCombatTeam()
         }
     }
 }
+
+// 给player添加一个`BattlePet`
 
 bool Player::AddBattlePetWithSpeciesId(BattlePetSpeciesEntry const* entry, uint16 flags /*= 0*/, bool sendUpdate /*= true*/, bool sendDiliveryUpdate /*= false*/)
 {

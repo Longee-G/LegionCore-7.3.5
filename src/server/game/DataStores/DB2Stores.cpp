@@ -1802,6 +1802,7 @@ void DB2Manager::InitDB2CustomStores()
     for (CharacterLoadoutItemEntry const* LoadOutItem : sCharacterLoadoutItemStore)
         _characterLoadoutItem[LoadOutItem->CharacterLoadoutID].push_back(LoadOutItem->ItemID);
 
+	// 通过 for 语句对sCharacterLoadoutStore进行遍历..
     for (CharacterLoadoutEntry const* entry : sCharacterLoadoutStore)
         _characterLoadout[entry->ChrClassID].insert(std::make_pair(entry->ID, entry->Purpose));
 
@@ -2703,6 +2704,8 @@ uint32 DB2Manager::GetItemDisplayId(uint32 itemId, uint32 appearanceModId) const
     return 0;
 }
 
+// 查找什么呢？
+
 uint32 DB2Manager::GetItemDIconFileDataId(uint32 itemId, uint32 appearanceModId) const
 {
     if (auto modifiedAppearance = GetItemModifiedAppearance(itemId, appearanceModId))
@@ -3030,17 +3033,29 @@ std::array<std::vector<uint32>, 2> DB2Manager::GetItemLoadOutItemsByClassID(uint
     return _array;
 }
 
+// class 角色职业
+// type 是什么呢？ 关联到 `CharacterLoadout.purpose`
 std::vector<uint32> DB2Manager::GetLowestIdItemLoadOutItemsBy(uint32 classID, uint8 type)
 {
+	// 根据class来获取一组 characterLoadoutID ...
     auto itr = _characterLoadout.find(classID);
     if (itr == _characterLoadout.end())
         return std::vector<uint32>();
 
+
     uint32 smallest = std::numeric_limits<uint32>::max();
-    for (auto const& v : itr->second)
-        if (v.second == type)
-            if (v.first < smallest)
-                smallest = v.first;
+	for (auto const& v : itr->second)
+	{
+		// itr->first	: CharacterLoadoutID
+		// itr->second	: Purpose
+		if (v.second == type)			// 检查purpose 是否一样...
+			if (v.first < smallest)
+				smallest = v.first;		// smallest 存储的是什么？ 是最小的 CharacterLoadoutID，为什么要取最小的呢？
+	}
+        
+
+	
+
 
     return _characterLoadoutItem.count(smallest) ? _characterLoadoutItem[smallest] : std::vector<uint32>();
 }

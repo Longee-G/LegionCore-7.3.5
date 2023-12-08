@@ -788,13 +788,13 @@ void GameObject::Update(uint32 diff)
             int32 _respawnDelay = m_respawnDelayTime;
             if (sWorld->getBoolConfig(CONFIG_RESPAWN_FROM_PLAYER_ENABLED))
             {
-                if (_respawnDelay <= 600 && GetGOData() && !GetGOInfo()->GetXpLevel() && !GetMap()->Instanceable()) // –∫–≤–µ—Å—Ç–æ–≤—ã–µ –ì–û –∏ –ø—Ä–æ—á–∏–π —à–ª–∞–∫
+                if (_respawnDelay <= 600 && GetGOData() && !GetGOInfo()->GetXpLevel() && !GetMap()->Instanceable()) // ß‹ß”ß÷ß„ß‰ß‡ß”ßÌß÷ ß§ß∞ ß⁄ ß·ß‚ß‡ßÈß⁄ß€ ßÍß›ß—ß‹
                 {
                     uint32 targetCount = GetPlayerFromArea(GetGOData()->areaId);
                     if (targetCount)
                     {
                         if (targetCount >= sWorld->getIntConfig(CONFIG_RESPAWN_FROM_PLAYER_COUNT))
-                            _respawnDelay /= targetCount; // –≥—Ä—É–±—ã–π —Ä–∞—Å—Å—á–µ—Ç, –∫–æ–Ω–µ—á–Ω–æ, –Ω–æ –ª—É—á—à–µ —É–∂..
+                            _respawnDelay /= targetCount; // ß‘ß‚ßÂß“ßÌß€ ß‚ß—ß„ß„ßÈß÷ß‰, ß‹ß‡ßﬂß÷ßÈßﬂß‡, ßﬂß‡ ß›ßÂßÈßÍß÷ ßÂßÿ..
 
                         if (_respawnDelay < 10)
                             _respawnDelay = urand(10, 15);
@@ -887,16 +887,18 @@ void GameObject::SaveToDB()
     // this should only be used when the gameobject has already been loaded
     // preferably after adding to map, because mapid may not be valid otherwise
     GameObjectData const* data = sObjectMgr->GetGOData(m_DBTableGuid);
+
     if (!data)
     {
         TC_LOG_ERROR(LOG_FILTER_GENERAL, "GameObject::SaveToDB failed, cannot get gameobject data!");
         return;
     }
 
-    SaveToDB(GetMapId(), data->spawnMask, data->phaseMask);
+	Uint32Set tmp;
+    SaveToDB(GetMapId(), data->spawnMask, data->phaseMask, tmp);
 }
 
-void GameObject::SaveToDB(uint32 mapid, uint64 spawnMask, uint32 phaseMask)
+void GameObject::SaveToDB(uint32 mapid, uint64 spawnMask, uint32 phaseMask, Uint32Set const& phaseIds)
 {
     auto goI = GetGOInfo();
     if (!goI)
@@ -907,9 +909,26 @@ void GameObject::SaveToDB(uint32 mapid, uint64 spawnMask, uint32 phaseMask)
     // update in loaded data (changing data only in this place)
     GameObjectData& data = sObjectMgr->NewGOData(m_DBTableGuid);
 
+
     uint32 zoneId = 0;
     uint32 areaId = 0;
     sMapMgr->GetZoneAndAreaId(zoneId, areaId, mapid, GetPositionX(), GetPositionY(), GetPositionZ());
+
+	std::string phaseId;
+	std::ostringstream ss;
+
+	for (auto id : phaseIds)
+		data.PhaseID.insert(id);
+
+	for (auto id : data.PhaseID)
+	{
+		if (ss.str().empty())
+			ss << id;
+		else
+			ss << " " << id;
+	}
+
+	phaseId = ss.str();
 
     // data->guid = guid must not be updated at save
     data.id = GetEntry();
@@ -922,7 +941,8 @@ void GameObject::SaveToDB(uint32 mapid, uint64 spawnMask, uint32 phaseMask)
     data.posZ = GetPositionZ();
     data.orientation = GetOrientation();
     data.rotation = m_worldRotation;
-    data.spawntimesecs = m_spawnedByDefault ? m_respawnDelayTime : -static_cast<int32>(m_respawnDelayTime);
+	//do NOT update this var
+    //data.spawntimesecs = m_spawnedByDefault ? m_respawnDelayTime : -static_cast<int32>(m_respawnDelayTime);
     data.animprogress = GetGoAnimProgress();
     data.go_state = GetGoState();
     data.spawnMask = spawnMask;
@@ -944,8 +964,9 @@ void GameObject::SaveToDB(uint32 mapid, uint64 spawnMask, uint32 phaseMask)
     stmt->setUInt16(index++, uint16(mapid));
     stmt->setUInt16(index++, zoneId);
     stmt->setUInt16(index++, areaId);
-    stmt->setUInt64(index++, spawnMask);
+    stmt->setUInt64(index++, spawnMask);	
     stmt->setUInt16(index++, uint16(GetPhaseMask()));
+	stmt->setString(index++, phaseId);		// PhaseId string
     stmt->setFloat(index++, GetPositionX());
     stmt->setFloat(index++, GetPositionY());
     stmt->setFloat(index++, GetPositionZ());

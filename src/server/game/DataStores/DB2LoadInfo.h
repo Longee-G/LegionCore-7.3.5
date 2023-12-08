@@ -1503,6 +1503,7 @@ struct CharacterLoadoutLoadInfo
     }
 };
 
+
 struct CharacterLoadoutItemLoadInfo
 {
     static DB2LoadInfo const* Instance()

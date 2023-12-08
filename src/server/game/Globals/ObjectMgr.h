@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
@@ -890,7 +890,7 @@ class ObjectMgr
         {
             return Trinity::Containers::MapGetValuePtr(_pageTextLocaleStore, entry);
         }
-
+		// key = dbguid
         GameObjectData const* GetGOData(ObjectGuid::LowType const& guid) const
         {
             return Trinity::Containers::MapGetValuePtr(_gameObjectDataStore, guid);
@@ -989,7 +989,7 @@ class ObjectMgr
 
         static void AddLocaleString(std::string&& value, LocaleConstant localeConstant, StringVector& data);
         static void GetLocaleString(StringVector const& data, LocaleConstant localeConstant, std::string& value);
-
+		// key = db guid
         GameObjectDataContainer _gameObjectDataStore;
         //Get item count from spawnmode
         uint8 GetCountFromSpawn(uint8 spawnmode, uint32 expansion);

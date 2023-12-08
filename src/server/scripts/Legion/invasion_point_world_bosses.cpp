@@ -1,5 +1,7 @@
 #include "AreaTriggerAI.h"
 #include "QuestData.h"
+#include "SpellScript.h"
+#include "ScriptedCreature.h"
 
 enum eSays
 {
@@ -91,7 +93,7 @@ enum Phase
     PHASE_2
 };
 
-//������� ����������
+
 struct boss_mistress_alluradel : public ScriptedAI
 {
     boss_mistress_alluradel(Creature* creature) : ScriptedAI(creature) {}
@@ -177,7 +179,7 @@ struct boss_mistress_alluradel : public ScriptedAI
     }
 };
 
-//���������� ����������� �������
+
 struct boss_pit_lor_vilemus : public ScriptedAI
 {
     boss_pit_lor_vilemus(Creature* creature) : ScriptedAI(creature) {}
@@ -418,7 +420,7 @@ struct boss_inquisitor_meto : public ScriptedAI
     }
 };
 
-//���������
+
 struct boss_sotanathor : public ScriptedAI
 {
     boss_sotanathor(Creature* creature) : ScriptedAI(creature) {}
@@ -515,7 +517,7 @@ uint32 RANDOM_GROTESQUE_SPAWN[2] =
     SPELL_GROTESQUE_RED
 };
 
-//������� �������
+
 struct boss_matron_folnuna : public ScriptedAI
 {
     boss_matron_folnuna(Creature* creature) : ScriptedAI(creature)

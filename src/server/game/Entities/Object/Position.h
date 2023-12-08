@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2008-2015 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -141,7 +141,7 @@ struct Position
 
     float m_positionX{};
     float m_positionY{};
-    float m_positionZ{};
+    float m_positionZ{};		// Z ? H
     float m_positionH{};
     float m_orientation{};
 };

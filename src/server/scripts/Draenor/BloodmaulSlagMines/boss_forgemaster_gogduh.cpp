@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2008-2015 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -18,18 +18,19 @@
 #include "ScriptMgr.h"
 #include "ScriptedCreature.h"
 #include "bloodmaul_slag_mines.h"
+#include "SpellScript.h"
 
 enum Texts
 {
-    TEXT_0, //< Да… он слабеет…
-    TEXT_1, //< Убейте его! Я освобожусь!
-    TEXT_2, //< Вы – щебень среди скал…
-    TEXT_3, //< Я – горный обвал!
-    TEXT_4, //< Бах!
-    TEXT_5, //< //< Я сотру вас с лица земли.
-    TEXT_6, //< Обратитесь в прах!
-    TEXT_7, //< Я возвращаюсь в землю…
-    TEXT_8, //< Сотру в порошок…
+    TEXT_0, //是的，他越来越弱…
+    TEXT_1, //杀了他！我要出去！
+    TEXT_2, //你是岩石中的碎石。。。
+    TEXT_3, //我是山崩！
+    TEXT_4, //喝倒采
+    TEXT_5, //我要把你们从地上抹去。
+    TEXT_6, //变成尘土！
+    TEXT_7, //我要回到地球…
+    TEXT_8, // 我要把它擦干净。
 
     //@TODO: find this text //< %s создает |cFFFF0404|Hspell:150045|h["Расплавление"]|h|r!
 };

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2008-2015 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -223,7 +223,7 @@ namespace WorldPackets
         public:
             struct ShipTransferPending
             {
-                uint32 ID = 0;
+                uint32 ID = 0;			// gameobject's entry of the ship 
                 int32 OriginMapID = -1;
             };
 

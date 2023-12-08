@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2008-2015 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -37,6 +37,8 @@ WorldPacket const* WorldPackets::Misc::InvalidatePlayer::Write()
 
 WorldPacket const* WorldPackets::Misc::LoginSetTimeSpeed::Write()
 {
+	// WowTime会将时间转换成timeZone的时间....
+
     _worldPacket << MS::Utilities::WowTime::Encode(ServerTime);
     _worldPacket << MS::Utilities::WowTime::Encode(GameTime);
     _worldPacket << float(NewSpeed);

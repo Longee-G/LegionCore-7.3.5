@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
@@ -77,6 +77,9 @@ m_muteTime(mute_time), m_timeOutTime(0), _countPenaltiesHwid(0), _player(nullptr
 m_playerSave(false), m_sessionDbLocaleIndex(locale), m_latency(0), _tutorialsChanged(false), recruiterId(recruiter), isRecruiter(isARecruiter), timeCharEnumOpcode(0), playerLoginCounter(0), forceExit(false), m_sUpdate(false), wardenModuleFailed(false), atAuthFlag(flag), canLogout(false),
 tokens(accountTokenMap), _referer(referer)
 {
+	// FIXME: 由于LEGION版本是俄文的数据库本地化，如果客户端是zhCN将会导致数据出现错误，强制设置locale=enUS
+	m_sessionDbLocaleIndex = LOCALE_enUS;
+
     _os = std::move(os);
     _accountName = std::move(name);
 
@@ -800,6 +803,7 @@ const char* WorldSession::GetTrinityString(int32 entry) const
     return sObjectMgr->GetTrinityString(entry, GetSessionDbLocaleIndex());
 }
 
+// 消息包未处理...
 void WorldSession::Handle_NULL(WorldPackets::Null& null)
 {
     TC_LOG_ERROR(LOG_FILTER_OPCODES, "Received unhandled opcode %s from %s",

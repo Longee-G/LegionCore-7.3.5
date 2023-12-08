@@ -1,6 +1,6 @@
 #include "Spell.h"
 #include "blackwing_descent.h"
-
+#include "ScriptedCreature.h"
 
 /* 
 43404 - maloriak
@@ -134,15 +134,15 @@ const Position dwarvenshieldsPos[8] =
 
 const Position atramedesnefariusspawnPos = {96.54f, -220.32f, 94.90f, 0.06f};
 
-Unit* atramedesTarget; // ���� ���� ��������
-Creature* atramedesShield; // ��������� �������������� ���
+Unit* atramedesTarget; //
+Creature* atramedesShield; //
 Creature* roaringsummon;
 Creature* _shields[8];
 
 //
-// ������� ���������� ��� �������� ����:
+//
 // pulse, breath, pulse, breath, flame, pulse, breath, pulse
-// ���� 80���, ������ �������� ������ 13 ������ ���-�� ������ �����������, ����� ������� ������� ������
+//
 //
 class boss_atramedes : public CreatureScript
 {

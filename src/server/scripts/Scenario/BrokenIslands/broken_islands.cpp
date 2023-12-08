@@ -1,4 +1,4 @@
-/*
+﻿/*
 The Broken Islands Scenario
 */
 
@@ -37,7 +37,9 @@ enum eDuelEnums
 
     QUEST_42782 = 42782,
     QUEST_44281 = 44281,
-    FACTION_HOSTILE = 2068
+    FACTION_HOSTILE = 2068,
+
+	SPELL_GROVEL = 7267     // cast when duel lost
 };
 
 int32 _m_auiRandomSay[] =
@@ -65,11 +67,15 @@ public:
                 if (pInitiateAI->m_bIsDuelInProgress)
                     return true;
             }
+
             creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
             creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_15);
 
-            int32 uiSayId = rand() % (sizeof(_m_auiRandomSay) / sizeof(int32));
+			// npc随机说话..
+            int32 uiSayId = rand() % (sizeof(_m_auiRandomSay) / sizeof(int32));			
             DoScriptText(_m_auiRandomSay[uiSayId], creature, player);
+			
+			// 在这里AI 没有主动攻击Player.. Player开始插旗进行决斗...
 
             player->CastSpell(creature, SPELL_DUEL, false);
             player->CastSpell(player, SPELL_DUEL_FLAG, true);
@@ -100,6 +106,7 @@ public:
         return new npc_q42782AI(creature);
     }
 
+	// npc 的AI
     struct npc_q42782AI : public CombatAI
     {
         npc_q42782AI(Creature* creature) : CombatAI(creature)
@@ -107,11 +114,11 @@ public:
             m_bIsDuelInProgress = false;
         }
 
-        bool lose;
-        ObjectGuid m_uiDuelerGUID;
+        bool lose;						// 
+        ObjectGuid m_uiDuelerGUID;		// 对手的guid
         uint32 m_uiDuelTimer;
-        bool m_bIsDuelInProgress;
-        uint32 spelltimer;
+        bool m_bIsDuelInProgress;		// 是否在决斗中...
+        uint32 spelltimer;				// cast timer ..
 
         void Reset() override
         {
@@ -120,13 +127,14 @@ public:
             CombatAI::Reset();
 
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_15);
-
+			
             m_uiDuelerGUID.Clear();
-            m_uiDuelTimer = 5000;
+            m_uiDuelTimer = 5000;		// 5秒？ 是5秒后才进入战斗吗？
             spelltimer = 2000;
             m_bIsDuelInProgress = false;
         }
 
+		// 法术击中AI？
         void SpellHit(Unit* pCaster, const SpellInfo* pSpell) override
         {
             if (!m_bIsDuelInProgress && pSpell->Id == SPELL_DUEL)
@@ -155,7 +163,7 @@ public:
                         pDoneBy->AttackStop();
                         me->CastSpell(pDoneBy, SPELL_DUEL_VICTORY, true);
                         lose = true;
-                        me->CastSpell(me, 7267, true);
+                        me->CastSpell(me, SPELL_GROVEL, true);
                         me->RestoreFaction();
                     }
                 }
@@ -169,8 +177,11 @@ public:
                 if (m_bIsDuelInProgress)
                 {
                     if (m_uiDuelTimer <= uiDiff)
-                    {
-                        me->setFaction(FACTION_HOSTILE);
+                    { // 等待m_uiDuelTimer的时间流逝才能AI切换到敌对状态，然后进行攻击...
+
+						// AI的阵营切换到敌对阵营... 这个阵营没有定义在`faction.db2` 到底是什么
+						// 有可能是写错了，是2048而不是2068，2048是pvp用的阵营...
+                        me->setFaction(FACTION_HOSTILE);		
 
                         if (Unit* unit = Unit::GetUnit(*me, m_uiDuelerGUID))
                             AttackStart(unit);
@@ -181,17 +192,18 @@ public:
                 return;
             }
 
-            if (m_bIsDuelInProgress)
+            if (m_bIsDuelInProgress)	// 
             {
                 if (lose)
                 {
-                    if (!me->HasAura(7267))
-                        EnterEvadeMode();
+                    if (!me->HasAura(SPELL_GROVEL))
+                        EnterEvadeMode();		// npc开始脱战 ...
                     return;
                 }
                 else if (me->getVictim() && me->getVictim()->GetTypeId() == TYPEID_PLAYER && me->getVictim()->HealthBelowPct(10))
-                {
-                    me->getVictim()->CastSpell(me->getVictim(), 7267, true); // beg
+                {	// player 的hp降到10%以下就认为player输了，避免被击杀
+
+                    me->getVictim()->CastSpell(me->getVictim(), SPELL_GROVEL, true);
                     me->getVictim()->RemoveGameObject(SPELL_DUEL_FLAG, true);
                     EnterEvadeMode();
                     return;
@@ -504,6 +516,8 @@ public:
     };
 };
 
+// npc 鲁索船长... 通过对话的方式来完成任务目标？
+
 class npc_q40518 : public CreatureScript
 {
 public:
@@ -515,11 +529,13 @@ public:
 
         //214608
         player->KilledMonsterCredit(creature->GetEntry());
-        player->CastSpell(player, 225147, false); //scene
+        player->CastSpell(player, 225147, false); //scene，施放这个法术后会传送到破碎海滩客户端场景...
 
         return true;
     };
 };
+
+// 当播放cutscene的时候，会触发这个脚本，通过这个脚本进入`场景战役-破碎海滩之战`
 
 class sceneTrigger_enterBrockenShores : public SceneTriggerScript
 {

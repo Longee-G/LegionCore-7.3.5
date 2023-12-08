@@ -24,6 +24,7 @@
 
 namespace WorldPackets
 {
+	// 战网付费服务
     namespace BattlePay
     {
         class GetProductList final : public ClientPacket

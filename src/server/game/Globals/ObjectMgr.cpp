@@ -587,6 +587,7 @@ void ObjectMgr::LoadCreatureLocales()
     TC_LOG_INFO(LOG_FILTER_SERVER_LOADING, ">> Loaded %u creature locale strings in %u ms", static_cast<uint32>(_creatureLocaleStore.size()), GetMSTimeDiffToNow(oldMSTime));
 }
 
+// what is WDB ?
 void ObjectMgr::LoadWDBCreatureTemplates()
 {
     uint32 oldMSTime = getMSTime();
@@ -1465,7 +1466,7 @@ void ObjectMgr::LoadCreatureModelInfo()
         // Checks
         if (modelInfo.gender > GENDER_NONE || modelInfo.gender == GENDER_UNKNOWN)
         {
-            TC_LOG_ERROR(LOG_FILTER_SQL, "Table `creature_model_info` has wrong gender (%u) for display id (%u).", uint32(modelInfo.gender), displayId);
+            //TC_LOG_ERROR(LOG_FILTER_SQL, "Table `creature_model_info` has wrong gender (%d) for display id (%u).", modelInfo.gender, displayId);
             modelInfo.gender = GENDER_MALE;
         }
 

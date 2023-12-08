@@ -45,6 +45,10 @@ public:
 
     std::string const& GetFilename();
     std::vector<std::string> GetKeysByString(std::string const& name);
+
+private:
+	template<class T>
+	T GetValueDefault(std::string const& name, T def) const;
 };
 
 #define sConfigMgr ConfigMgr::instance()

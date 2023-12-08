@@ -2021,9 +2021,16 @@ void SpellMgr::LoadSpellProcs()
                 TC_LOG_ERROR(LOG_FILTER_SQL, "`spell_proc` table entry for spellId %u has wrong `spellTypeMask` set: %u", spellId, procEntry.spellTypeMask);
             if (procEntry.spellTypeMask && !(procEntry.typeMask & (SPELL_PROC_FLAG_MASK | PERIODIC_PROC_FLAG_MASK)))
                 TC_LOG_ERROR(LOG_FILTER_SQL, "`spell_proc` table entry for spellId %u has `spellTypeMask` value defined, but it won't be used for defined `typeMask` value", spellId);
-            if (!procEntry.spellPhaseMask && procEntry.typeMask & REQ_SPELL_PHASE_PROC_FLAG_MASK)
+            
+			// what is Spell Proc ??
+
+			// [Longee] 这个法术出现错误怎么解决...
+			// 没有定义 typeMask 的值导致的错误吗？ typeMask值在数据库中是0
+			if (!procEntry.spellPhaseMask && (procEntry.typeMask & REQ_SPELL_PHASE_PROC_FLAG_MASK))
                 TC_LOG_ERROR(LOG_FILTER_SQL, "`spell_proc` table entry for spellId %u doesn't have `spellPhaseMask` value defined, but it's required for defined `typeMask` value, proc will not be triggered", spellId);
-            if (procEntry.spellPhaseMask & ~PROC_SPELL_PHASE_MASK_ALL)
+            
+			
+			if (procEntry.spellPhaseMask & ~PROC_SPELL_PHASE_MASK_ALL)
                 TC_LOG_ERROR(LOG_FILTER_SQL, "`spell_proc` table entry for spellId %u has wrong `spellPhaseMask` set: %u", spellId, procEntry.spellPhaseMask);
             if (procEntry.spellPhaseMask && !(procEntry.typeMask & REQ_SPELL_PHASE_PROC_FLAG_MASK))
                 TC_LOG_ERROR(LOG_FILTER_SQL, "`spell_proc` table entry for spellId %u has `spellPhaseMask` value defined, but it won't be used for defined `typeMask` value", spellId);

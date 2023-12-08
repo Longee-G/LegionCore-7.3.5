@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
@@ -209,6 +209,7 @@ void DoScriptText(int32 iTextEntry, WorldObject* pSource, Unit* target)
 
     TC_LOG_DEBUG(LOG_FILTER_TSCR, "DoScriptText: text entry=%i, Sound=%u, Type=%u, Language=%u, Emote=%u", iTextEntry, pData->uiSoundId, pData->uiType, pData->uiLanguage, pData->uiEmote);
 
+	// 处理表情... 
     if (pData->uiEmote)
     {
         if (pSource->IsCreature() || pSource->IsPlayer())

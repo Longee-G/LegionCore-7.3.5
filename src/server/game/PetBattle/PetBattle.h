@@ -39,7 +39,7 @@ enum PetBattleType : uint8
 {
     PETBATTLE_TYPE_PVE,
     PETBATTLE_TYPE_PVP_DUEL,
-    PETBATTLE_TYPE_PVP_MATCHMAKING
+    PETBATTLE_TYPE_PVP_MATCHMAKING		// ≈‰∂‘..
 };
 
 enum PvePetBattleType
@@ -606,6 +606,7 @@ private:
 
 };
 
+// What's LFB ???
 enum LFBUpdateStatus : uint32
 {
     LFB_NONE                                    = 0,

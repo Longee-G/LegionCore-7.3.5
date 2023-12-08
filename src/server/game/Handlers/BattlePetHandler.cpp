@@ -1328,6 +1328,7 @@ void WorldSession::SendBattlePetJournalLockDenied()
 void WorldSession::SendBattlePetJournal()
 {
     auto pets = _player->GetBattlePets();
+	// 未解锁的栏位数量...
     auto unlockedSlotCount = _player->GetUnlockedPetBattleSlot();
     auto petSlots = _player->GetBattlePetCombatTeam();
 
