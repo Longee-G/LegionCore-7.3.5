@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
@@ -867,7 +867,7 @@ enum OpcodeServer : uint16
     SMSG_BATTLE_PAY_VAS_PURCHASE_STARTED                    = 0x2832,
     SMSG_BATTLE_PAY_VAS_REALM_LIST                          = 0x2831,
     SMSG_BATTLE_PAY_VAS_TRANSFER_QUEUE_STATUS               = 0x2858,
-	SMSG_BATTLE_PAY_UNK = 0x285F,
+	SMSG_BATTLE_PAY_UNK										= 0x285F,
 
     SMSG_BATTLE_PET_CAGE_DATE_ERROR                         = 0x26A0,
     SMSG_BATTLE_PET_DELETED                                 = 0x2606,
@@ -1037,7 +1037,6 @@ enum OpcodeServer : uint16
     SMSG_DISPLAY_GAME_ERROR                                 = 0x25B5,
     SMSG_DISPLAY_PLAYER_CHOICE                              = 0x26A1,
     SMSG_DISPLAY_PROMOTION                                  = 0x2668,
-    SMSG_BATTLE_PAY_UNK                                     = 0x285F,
     SMSG_DISPLAY_QUEST_POPUP                                = 0x2A9D,
     SMSG_DISPLAY_TOAST                                      = 0x2638,
     SMSG_DONT_AUTO_PUSH_SPELLS_TO_ACTION_BAR                = 0x25F6,
