@@ -36,9 +36,9 @@ SET(_OPENSSL_ROOT_HINTS
 IF(PLATFORM EQUAL 64)
   SET(_OPENSSL_ROOT_PATHS
     "${PROJECT_SOURCE_DIR}/../Requirements/Win64/OpenSSL_1.1.1e_Win64"
-    #"[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenSSL (64-bit)_is1;InstallLocation]"
-    #"C:/OpenSSL-Win64/"
-    #"C:/OpenSSL/"
+    "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenSSL (64-bit)_is1;InstallLocation]"
+    "C:/OpenSSL-Win64/"
+    "C:/OpenSSL/"
   )
 ELSE()
   SET(_OPENSSL_ROOT_PATHS

@@ -37,7 +37,9 @@ enum eDuelEnums
 
     QUEST_42782 = 42782,
     QUEST_44281 = 44281,
-    FACTION_HOSTILE = 2068
+    FACTION_HOSTILE = 2068,
+
+	SPELL_GROVEL = 7267     // cast when duel lost
 };
 
 int32 _m_auiRandomSay[] =
@@ -45,6 +47,7 @@ int32 _m_auiRandomSay[] =
     SAY_DUEL_A, SAY_DUEL_B, SAY_DUEL_C, SAY_DUEL_D, SAY_DUEL_E, SAY_DUEL_F, SAY_DUEL_G, SAY_DUEL_H, SAY_DUEL_I
 };
 
+// 这个脚本是用来实现军团再临开门任务`To Be Prepared` 的最后一个条件，和npc进行决斗...
 
 class npc_q42782 : public CreatureScript
 {
@@ -65,11 +68,15 @@ public:
                 if (pInitiateAI->m_bIsDuelInProgress)
                     return true;
             }
+
             creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
             creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_15);
 
-            int32 uiSayId = rand() % (sizeof(_m_auiRandomSay) / sizeof(int32));
+			// npc随机说话..
+            int32 uiSayId = rand() % (sizeof(_m_auiRandomSay) / sizeof(int32));			
             DoScriptText(_m_auiRandomSay[uiSayId], creature, player);
+			
+			// 在这里AI 没有主动攻击Player.. Player开始插旗进行决斗...
 
             player->CastSpell(creature, SPELL_DUEL, false);
             player->CastSpell(player, SPELL_DUEL_FLAG, true);
@@ -100,6 +107,7 @@ public:
         return new npc_q42782AI(creature);
     }
 
+	// npc 的AI
     struct npc_q42782AI : public CombatAI
     {
         npc_q42782AI(Creature* creature) : CombatAI(creature)
@@ -107,11 +115,11 @@ public:
             m_bIsDuelInProgress = false;
         }
 
-        bool lose;
-        ObjectGuid m_uiDuelerGUID;
+        bool lose;						// 
+        ObjectGuid m_uiDuelerGUID;		// 对手的guid
         uint32 m_uiDuelTimer;
-        bool m_bIsDuelInProgress;
-        uint32 spelltimer;
+        bool m_bIsDuelInProgress;		// 是否在决斗中...
+        uint32 spelltimer;				// cast timer ..
 
         void Reset() override
         {
@@ -120,13 +128,14 @@ public:
             CombatAI::Reset();
 
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_15);
-
+			
             m_uiDuelerGUID.Clear();
-            m_uiDuelTimer = 5000;
+            m_uiDuelTimer = 5000;		// 5秒？ 是5秒后才进入战斗吗？
             spelltimer = 2000;
             m_bIsDuelInProgress = false;
         }
 
+		// 法术击中AI
         void SpellHit(Unit* pCaster, const SpellInfo* pSpell) override
         {
             if (!m_bIsDuelInProgress && pSpell->Id == SPELL_DUEL)
@@ -155,7 +164,7 @@ public:
                         pDoneBy->AttackStop();
                         me->CastSpell(pDoneBy, SPELL_DUEL_VICTORY, true);
                         lose = true;
-                        me->CastSpell(me, 7267, true);
+                        me->CastSpell(me, SPELL_GROVEL, true);
                         me->RestoreFaction();
                     }
                 }
@@ -169,8 +178,11 @@ public:
                 if (m_bIsDuelInProgress)
                 {
                     if (m_uiDuelTimer <= uiDiff)
-                    {
-                        me->setFaction(FACTION_HOSTILE);
+                    { // 等待m_uiDuelTimer的时间流逝才能AI切换到敌对状态，然后进行攻击...
+
+						// AI的阵营切换到敌对阵营... 这个阵营没有定义在`faction.db2` 到底是什么
+						// 有可能是写错了，是2048而不是2068，2048是pvp用的阵营...
+                        me->setFaction(FACTION_HOSTILE);		
 
                         if (Unit* unit = Unit::GetUnit(*me, m_uiDuelerGUID))
                             AttackStart(unit);
@@ -181,17 +193,18 @@ public:
                 return;
             }
 
-            if (m_bIsDuelInProgress)
+            if (m_bIsDuelInProgress)	// 
             {
                 if (lose)
                 {
-                    if (!me->HasAura(7267))
-                        EnterEvadeMode();
+                    if (!me->HasAura(SPELL_GROVEL))
+                        EnterEvadeMode();		// npc开始脱战 ...
                     return;
                 }
                 else if (me->getVictim() && me->getVictim()->GetTypeId() == TYPEID_PLAYER && me->getVictim()->HealthBelowPct(10))
-                {
-                    me->getVictim()->CastSpell(me->getVictim(), 7267, true); // beg
+                {	// player 的hp降到10%以下就认为player输了，避免被击杀
+
+                    me->getVictim()->CastSpell(me->getVictim(), SPELL_GROVEL, true);
                     me->getVictim()->RemoveGameObject(SPELL_DUEL_FLAG, true);
                     EnterEvadeMode();
                     return;
@@ -485,7 +498,7 @@ UnitGUID: Full: 0x080F28000000000000000000001C37E5; HighType: Player; Low: 18493
 */
 
 
-
+// 
 
 class npc_q42740 : public CreatureScript
 {
@@ -498,11 +511,13 @@ public:
 
         //214608
         player->KilledMonsterCredit(creature->GetEntry());
-        player->CastSpell(player, 216356, false); //scene
+        player->CastSpell(player, 216356, false); //scene 联盟的
 
         return true;
     };
 };
+
+// npc 鲁索船长... 通过对话的方式来完成任务目标？
 
 class npc_q40518 : public CreatureScript
 {
@@ -515,11 +530,16 @@ public:
 
         //214608
         player->KilledMonsterCredit(creature->GetEntry());
-        player->CastSpell(player, 225147, false); //scene
+        player->CastSpell(player, 225147, false); //scene，施放这个法术后会传送到破碎海滩客户端场景...
 
         return true;
     };
 };
+
+// 场景触发？这个是怎么触发的？
+// 当播放cutscene的时候，会触发这个脚本，通过这个脚本进入`场景战役-破碎海滩之战`
+// 这个是通过绑定在 `world.spell_scene`表的ScriptName字段来触发的
+// 这个表是LEGION自己定义的，并不是TCore或者ACore的模块..
 
 class sceneTrigger_enterBrockenShores : public SceneTriggerScript
 {
@@ -582,6 +602,9 @@ public:
 
 
 //! 217781 phase update.
+
+// 这个spell是谁cast的？ 
+
 class spell_bi_enter_stage1 : public SpellScriptLoader
 {
 public:
@@ -618,11 +641,11 @@ public:
                 if (script->getScenarionStep() != 0)
                     return;
 
-                //scenation ID 1189 step 0
+                //scenation ID 1189 step 0		Horde
                 player->UpdateAchievementCriteria(CRITERIA_TYPE_SCRIPT_EVENT_2, 54140);
 
-                //scenation ID 786 step 0
-                player->UpdateAchievementCriteria(CRITERIA_TYPE_SCRIPT_EVENT_2, 44060);
+                //scenation ID 786 step 0   Alliance
+                player->UpdateAchievementCriteria(CRITERIA_TYPE_SCRIPT_EVENT_2, 44060);	// 完成了Step 0
 
 
                 Map::PlayerList const &PlList = player->GetMap()->GetPlayers();
@@ -658,15 +681,39 @@ public:
     }
 };
 
+// 关联在 `world.spell_scene` 表
+// 这个脚本是关联在切屏动画上的 `SceneScriptPackageID`
+// spell 199357/ 225150
+//
+// 关联的[SceneScriptPackage.db2].ID 为 
+// pkgid:1531	Broken Shore Scenario - Alliance - Intro				`misc:1157` = sceneId
+// pkgid:1716	Broken Shore Scenario - Horde - Intro					`misc:1440`
+//
+// 关联的misc =  SceneId ...
+//
+// playflag:62 是什么, scene播放的flag...
+// 
+// 这个脚本就是播放pkgId:1531或者pkgId:1716的动画时加载的...
+// 
+// 那么pkgId:1531是由谁来播放的？ 没有找到调用的1531的接口，那么关联的  sceneId:1157 呢？
+// 也找不到，到底关联到什么地方？ 通过 `spell:199357` 来调用？
+// 
+// Scenario 启动的时候会关联什么数据吗？
+
 class sceneTrigger_part1 : public SceneTriggerScript
 {
 public:
-    sceneTrigger_part1() : SceneTriggerScript("sceneTrigger_part1")
-    {}
+    sceneTrigger_part1() : SceneTriggerScript("sceneTrigger_part1")   {}
 
+	// 
     bool OnTrigger(Player* player, SpellScene const* trigger, std::string type) override
     {
-        if (type == "farsight")
+		// 这个type是从什么地方来的？ 
+		// 是从客户端通过消息传递到服务器的... 这个应该是动画播放的事件
+		// 但是我们从哪里得到这些定义呢？
+		// 
+		// type是由客户端上传到服务器的，表示这个时候剧情到了哪个节点
+        if (type == "farsight")	
         {
             if (auto data = player->GetInstanceScript())
             {
@@ -676,6 +723,8 @@ public:
 
                 WorldLocation destTarget;
                 destTarget.m_mapId = 1460;
+
+
                 if (player->GetTeam() == HORDE)
                 {
                     destTarget.m_positionX = 591.77f;
@@ -692,6 +741,8 @@ public:
                 }
                 destTarget.m_orientation = 0.5030039f;
 
+				// player 到了某个点，所以要加载地图上关联的Grid吗？
+
                 m->LoadGrid(destTarget.m_positionX, destTarget.m_positionY);
 
                 DynamicObject* dynObj = new DynamicObject(true);
@@ -704,12 +755,14 @@ public:
                 //dynObj->SetUInt32Value(DYNAMICOBJECT_FIELD_BYTES, 536903323);
                 dynObj->SetDuration(60000);
 
+				// 
+
                 player->SetViewpoint(dynObj, true);
                 player->SetUInt32Value(UNIT_FIELD_CHANNEL_SPELL, player->GetTeam() == HORDE ? 225153 : 215222);
                 player->SetUInt32Value(UNIT_FIELD_CHANNEL_SPELL_XSPELL_VISUAL, player->GetTeam() == HORDE ? 107211 : 101301);
             }
         }
-        if (type == "phaseupdate")
+        if (type == "phaseupdate")	// 阶段更新
         {
             Map* m = player->FindMap();
             if (!m)
@@ -725,7 +778,7 @@ public:
             if (GameObject *go = m->GetGameObject(guid))
                 go->SetVisible(true);
         }
-        if (type == "port")
+        if (type == "port") // 这个是啥？船入港吗？
         {
             InstanceScript *script = player->GetInstanceScript();
 
@@ -739,7 +792,7 @@ public:
             player->UpdateAchievementCriteria(CRITERIA_TYPE_SCRIPT_EVENT_2, 54140);
 
             //scenation ID 786 step 0
-            player->UpdateAchievementCriteria(CRITERIA_TYPE_SCRIPT_EVENT_2, 44060);
+            player->UpdateAchievementCriteria(CRITERIA_TYPE_SCRIPT_EVENT_2, 44060);	// 剧情完成step 0
 
             if (WorldObject* obj = player->GetViewpoint())
                 player->SetViewpoint(obj, false);
@@ -763,29 +816,33 @@ public:
                 if (Player* plr = i->getSource())
                     plr->CastSpell(plr, plr->GetTeam() == ALLIANCE ? 199358 : 225152, false);
         }
-        if (type == "complete")
-        {
-            //scenation ID 1189 step 0
-            player->UpdateAchievementCriteria(CRITERIA_TYPE_SCRIPT_EVENT_2, 54140);
 
-            //scenation ID 786 step 0
-            player->UpdateAchievementCriteria(CRITERIA_TYPE_SCRIPT_EVENT_2, 44060);
+		if (type == "complete")
+		{
+			//scenation ID 1189 step 0
+			player->UpdateAchievementCriteria(CRITERIA_TYPE_SCRIPT_EVENT_2, 54140);
 
-            /*if (player->GetDistance(461.8785f, 2032.679f, 0.1627506f) > 300.0f)
-            {
-                if (WorldObject* obj = player->GetViewpoint())
-                    player->SetViewpoint(obj, false);
+			//scenation ID 786 step 0
+			player->UpdateAchievementCriteria(CRITERIA_TYPE_SCRIPT_EVENT_2, 44060);
 
-                if (Transport* transport = player->GetTransport())
-                {
-                    transport->RemovePassenger(player);
-                    player->setTransport(NULL);
-                    player->m_movementInfo.transport.Reset();
-                }
+			/*
+			if (player->GetDistance(461.8785f, 2032.679f, 0.1627506f) > 300.0f)
+			{
+				if (WorldObject* obj = player->GetViewpoint())
+					player->SetViewpoint(obj, false);
 
-                player->CastSpell(player, player->GetTeam() == ALLIANCE ? 199358 : 225152, false);
-            }*/
-        }
+				if (Transport* transport = player->GetTransport())
+				{
+					transport->RemovePassenger(player);
+					player->setTransport(NULL);
+					player->m_movementInfo.transport.Reset();
+				}
+
+				player->CastSpell(player, player->GetTeam() == ALLIANCE ? 199358 : 225152, false);
+			}
+			*/
+		}
+
         return true;
     }
 };

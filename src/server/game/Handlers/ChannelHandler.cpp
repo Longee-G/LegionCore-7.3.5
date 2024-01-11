@@ -41,7 +41,7 @@ void WorldSession::HandleJoinChannel(WorldPackets::Channel::JoinChannel& packet)
     if (packet.ChannelName.empty())
         return;
 
-    if (isdigit(packet.ChannelName[0]))
+    if (isdigit((uint8)packet.ChannelName[0]))
         return;
 
     if (!ChatHandler(this).isValidChatMessage(packet.ChannelName.c_str()))

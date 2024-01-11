@@ -47,7 +47,8 @@ void WildBattlePetMgr::Load()
     QueryResult result = WorldDatabase.Query("SELECT Zone, Species, `BattlePetEntry`, `Max`, RespawnTime, MinLevel, MaxLevel, CreatureEntry FROM battlepet_wild_zone_pool");
     if (!result)
     {
-        TC_LOG_INFO(LOG_FILTER_SERVER_LOADING, ">> Loaded 0 species definitions. DB table `WildBattlePetZoneSpecies` is empty");
+        //TC_LOG_INFO(LOG_FILTER_SERVER_LOADING, ">> Loaded 0 species definitions. DB table `WildBattlePetZoneSpecies` is empty");
+		TC_LOG_INFO(LOG_FILTER_SERVER_LOADING, ">> Loaded 0 species definitions. DB table `battlepet_wild_zone_pool` is empty");
         return;
     }
 
@@ -80,21 +81,21 @@ void WildBattlePetMgr::Load()
     TC_LOG_INFO(LOG_FILTER_SERVER_LOADING, ">> Loaded %u species definitions.", count);
 }
 
-void WildBattlePetMgr::Populate(WildPetPoolTemplate* wTemplate, WildBattlePetPool* pTemplate)
+void WildBattlePetMgr::Populate(WildPetPoolTemplate* pTemplate, WildBattlePetPool* pPool)
 {
-    if (!wTemplate)
+    if (!pTemplate)
         return;
 
-    if (wTemplate->Max <= pTemplate->Replaced.size())
+    if (pTemplate->Max <= pPool->Replaced.size())
         return;
 
-    if (sDB2Manager.HasBattlePetSpeciesFlag(wTemplate->Species, BATTLEPET_SPECIES_FLAG_UNTAMEABLE))
+    if (sDB2Manager.HasBattlePetSpeciesFlag(pTemplate->Species, BATTLEPET_SPECIES_FLAG_UNTAMEABLE))
         return;
 
     std::vector<Creature*> availableForReplacement;
-    if (!pTemplate->ToBeReplaced.empty())
-        for (auto itr2 = pTemplate->ToBeReplaced.begin(); itr2 != pTemplate->ToBeReplaced.end(); ++itr2)
-            if (pTemplate->ReplacedRelation.find((*itr2)->GetGUID()) == pTemplate->ReplacedRelation.end())
+    if (!pPool->ToBeReplaced.empty())
+        for (auto itr2 = pPool->ToBeReplaced.begin(); itr2 != pPool->ToBeReplaced.end(); ++itr2)
+            if (pPool->ReplacedRelation.find((*itr2)->GetGUID()) == pPool->ReplacedRelation.end())
                 availableForReplacement.push_back(*itr2);
 
     if (availableForReplacement.empty())
@@ -102,9 +103,9 @@ void WildBattlePetMgr::Populate(WildPetPoolTemplate* wTemplate, WildBattlePetPoo
 
     std::shuffle(availableForReplacement.begin(), availableForReplacement.end(), std::mt19937(std::random_device()()));
 
-    uint32 replaceCount = wTemplate->Max - pTemplate->Replaced.size();
+    uint32 replaceCount = pTemplate->Max - pPool->Replaced.size();
     for (size_t y = 0; y < availableForReplacement.size() && y < replaceCount; y++)
-        ReplaceCreature(availableForReplacement[y], wTemplate, pTemplate);
+        ReplaceCreature(availableForReplacement[y], pTemplate, pPool);
 }
 
 void WildBattlePetMgr::ReplaceCreature(Creature* creature, WildPetPoolTemplate* wTemplate, WildBattlePetPool* pTemplate)

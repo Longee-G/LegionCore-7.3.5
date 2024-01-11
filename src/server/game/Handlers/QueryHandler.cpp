@@ -105,6 +105,8 @@ void WorldSession::HandleCreatureQuery(WorldPackets::Query::QueryCreature& packe
     SendPacket(response.Write());
 }
 
+#define TOSTR std::to_string
+
 void WorldSession::HandleQueryGameObject(WorldPackets::Query::QueryGameObject& packet)
 {
     WorldPackets::Query::QueryGameObjectResponse response;
@@ -138,6 +140,11 @@ void WorldSession::HandleQueryGameObject(WorldPackets::Query::QueryGameObject& p
             ObjectMgr::GetLocaleString(gameObjectLocale->CastBarCaption, localeConstant, stats.CastBarCaption);
             ObjectMgr::GetLocaleString(gameObjectLocale->Unk1, localeConstant, stats.UnkString);
         }
+
+		// [TEST][Longee]
+		// display gameobject Id & Type
+		stats.Name[0].append("[Id:").append(TOSTR(gameObjectInfo->entry)).append("]")
+			.append("[Type:").append(TOSTR(gameObjectInfo->type)).append("]");
     }
 
     SendPacket(response.Write());

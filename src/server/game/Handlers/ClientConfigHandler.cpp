@@ -88,7 +88,9 @@ void WorldSession::HandleUpdateClientSettings(WorldPackets::ClientConfig::Update
 { }
 
 void WorldSession::HandleSaveClientVariables(WorldPackets::ClientConfig::SaveClientVariables& /*packet*/)
-{ }
+{ 
+	// TODO: how to save client variables ...
+}
 
 void WorldSession::HandleGetRemainingGameTime(WorldPackets::ClientConfig::GetRemainingGameTime& /*packet*/)
 { }

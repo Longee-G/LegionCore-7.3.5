@@ -32,6 +32,7 @@
 #include <safe_ptr.h>
 #include "StringFormat.h"
 #include "Common.h"
+#include "AsioHacksFwd.h"
 
 typedef std::unordered_map<uint8, Logger> LoggerMap;
 typedef std::vector<Logger*> LoggerList;
@@ -124,7 +125,7 @@ private:
 
     uint32 realm{};
     boost::asio::io_service* _ioService;
-    boost::asio::strand* _strand;
+    Trinity::AsioStrand* _strand;
 };
 
 #define sLog Log::instance()

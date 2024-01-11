@@ -21,7 +21,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 #include "Config.h"
-
+#include "Log.h"
 namespace
 {
     boost::property_tree::ptree _config;
@@ -30,6 +30,14 @@ namespace
 }
 
 namespace bpt = boost::property_tree;
+
+bool StringToBool(std::string const& str)
+{
+	std::string lowerStr = str;
+	std::transform(str.begin(), str.end(), lowerStr.begin(), [](char c) { return char(::tolower(c)); });
+	return lowerStr == "1" || lowerStr == "true" || lowerStr == "yes";
+}
+
 
 bool ConfigMgr::LoadInitial(std::string const& file, std::string& error)
 {
@@ -81,18 +89,52 @@ std::string ConfigMgr::GetStringDefault(std::string const& name, const std::stri
     return value;
 }
 
+template<class T>
+inline T ConfigMgr::GetValueDefault(std::string const & name, T def) const
+{
+	try
+	{
+		return _config.get<T>(bpt::ptree::path_type(name, '/'));
+	}
+	catch (bpt::ptree_bad_path)
+	{
+		TC_LOG_WARN(LOG_FILTER_SERVER_LOADING, "Missing name %s in config file %s, add \"%s = %s\" to this file",
+			name.c_str(), _filename.c_str(), name.c_str(), std::to_string(def).c_str());
+	}
+	catch (bpt::ptree_bad_data)
+	{
+		TC_LOG_ERROR(LOG_FILTER_SERVER_LOADING, "Bad value defined for name %s in config file %s, going to use %s instead",
+			name.c_str(), _filename.c_str(), std::to_string(def).c_str());
+	}
+
+	return def;
+}
+template<>
+std::string ConfigMgr::GetValueDefault<std::string>(std::string const& name, std::string def) const
+{
+	try
+	{
+		return _config.get<std::string>(bpt::ptree::path_type(name, '/'));
+	}
+	catch (bpt::ptree_bad_path)
+	{
+		TC_LOG_WARN(LOG_FILTER_SERVER_LOADING, "Missing name %s in config file %s, add \"%s = %s\" to this file",
+			name.c_str(), _filename.c_str(), name.c_str(), def.c_str());
+	}
+	catch (bpt::ptree_bad_data)
+	{
+		TC_LOG_ERROR(LOG_FILTER_SERVER_LOADING, "Bad value defined for name %s in config file %s, going to use %s instead",
+			name.c_str(), _filename.c_str(), def.c_str());
+	}
+
+	return def;
+}
+
 bool ConfigMgr::GetBoolDefault(std::string const& name, bool def)
 {
-    try
-    {
-        auto val = _config.get<std::string>(bpt::ptree::path_type(name, '/'));
-        val.erase(std::remove(val.begin(), val.end(), '"'), val.end());
-        return (val == "true" || val == "TRUE" || val == "yes" || val == "YES" || val == "1");
-    }
-    catch (std::exception const& /*ex*/)
-    {
-        return def;
-    }
+	std::string val = GetValueDefault(name, std::string(def ? "1" : "0"));
+	val.erase(std::remove(val.begin(), val.end(), '"'), val.end());
+	return StringToBool(val);
 }
 
 int ConfigMgr::GetIntDefault(std::string const& name, int def)

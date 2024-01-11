@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -1847,12 +1847,20 @@ public:
 
         if (Unit* target = handler->getSelectedUnit())
         {
+			handler->PSendSysMessage(">> phase info of `%s`", target->GetName());
             std::set<uint32> const& phases = target->GetPhases();
-            std::ostringstream ss;
-            for (uint32 phaseId : phases)
-                ss << phaseId << ' ';
+			if (phases.empty())
+			{
+				handler->PSendSysMessage("Phases : NULL");
+			}
+			else
+			{
+				std::ostringstream ss;
+				for (uint32 phaseId : phases)
+					ss << phaseId << ' ';
 
-            handler->PSendSysMessage("GetPhases : %s", ss.str().c_str());
+				handler->PSendSysMessage("Phases : %s", ss.str().c_str());
+			}
         }
 
         return true;
@@ -1887,6 +1895,7 @@ public:
         uint32 mapId;
         uint32 areaId;
         uint32 phase            = 0;
+		float x, y, z;	// player's coord
         std::string lastLogin   = handler->GetTrinityString(LANG_ERROR);
 
         // get additional information from Player object
@@ -1909,6 +1918,10 @@ public:
             phase             = target->GetPhaseMask();
             totalAccountTime  = target->GetTotalAccountTime();
             lastLogin = "Online";
+			x = target->GetPositionX();
+			y = target->GetPositionY();
+			z = target->GetPositionZ();
+
         }
         // get additional information from DB
         else
@@ -1933,8 +1946,8 @@ public:
             Class             = fields[5].GetUInt8();
             mapId             = fields[6].GetUInt16();
             areaId            = fields[7].GetUInt16();
-            lastLogin         = TimeToTimestampStr(time_t(fields[8].GetUInt32()));
-        }
+            lastLogin         = TimeToTimestampStr(time_t(fields[8].GetUInt32()));        
+		}
 
         std::string userName    = handler->GetTrinityString(LANG_ERROR);
         std::string eMail       = handler->GetTrinityString(LANG_ERROR);
@@ -2122,6 +2135,13 @@ public:
         // Add map, zone, subzone and phase to output
         std::string areaName = "<unknown>";
         std::string zoneName = "";
+		
+		
+		std::ostringstream ss;
+		std::string coordStr = "";
+		ss << "Coord(" << "x:" << x << " y:" << y << " z:" << z << ")";
+		coordStr = ss.str();
+
 
         MapEntry const* map = sMapStore.LookupEntry(mapId);
 
@@ -2130,15 +2150,28 @@ public:
         {
             areaName = area->ZoneName->Str[sObjectMgr->GetDBCLocaleIndex()];
 
+			ss.str("");
+			ss << areaName << "[" << area->ID << "]";
+			areaName = ss.str();
+
+
             AreaTableEntry const* zone = sAreaTableStore.LookupEntry(area->ParentAreaID);
-            if (zone)
-                zoneName = zone->ZoneName->Str[sObjectMgr->GetDBCLocaleIndex()];
+			if (zone)
+			{
+				ss.str("");
+				ss << zone->ZoneName->Str[sObjectMgr->GetDBCLocaleIndex()] << "[" << zone->ID << "]" ;
+				zoneName = ss.str();
+			}
+
+			ss.str("");			
+			ss << zoneName << " " << coordStr;
+			zoneName = ss.str();
         }
 
         if (target)
         {
             if (!zoneName.empty())
-                handler->PSendSysMessage(LANG_PINFO_MAP_ONLINE, map->MapName->Str[sObjectMgr->GetDBCLocaleIndex()], zoneName.c_str(), areaName.c_str(), phase);
+                handler->PSendSysMessage(LANG_PINFO_MAP_ONLINE, map->MapName->Str[sObjectMgr->GetDBCLocaleIndex()], areaName.c_str(), zoneName.c_str(), phase);
             else
                 handler->PSendSysMessage(LANG_PINFO_MAP_ONLINE, map->MapName->Str[sObjectMgr->GetDBCLocaleIndex()], areaName.c_str(), "<unknown>", phase);
         }

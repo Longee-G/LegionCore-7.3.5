@@ -1068,7 +1068,7 @@ class WorldSession
         void SendClientCacheVersion(uint32 version);
         void InitializeSession();
         void InitializeSessionCallback(SQLQueryHolder* realmHolder, SQLQueryHolder* holder);
-
+		// battlepay handler
         void HandleGetPurchaseListQuery(WorldPackets::BattlePay::GetPurchaseListQuery& packet);
         void HandleBattlePayQueryClassTrialResult(WorldPackets::BattlePay::BattlePayQueryClassTrialResult& packet);
         void HandleBattlePayTrialBoostCharacter(WorldPackets::BattlePay::BattlePayTrialBoostCharacter& packet);
@@ -1076,7 +1076,13 @@ class WorldSession
         void HandleBattlePayPurchaseDetailsResponse(WorldPackets::BattlePay::BattlePayPurchaseDetailsResponse& packet);
         void HandleUpdateVasPurchaseStates(WorldPackets::BattlePay::UpdateVasPurchaseStates& packet);
         void HandleGetProductList(WorldPackets::BattlePay::GetProductList& packet);
-        void SendDisplayPromo(int32 promotionID = 0);
+		void HandleBattlePayDistributionAssign(WorldPackets::BattlePay::DistributionAssignToTarget& packet);
+		void HandleBattlePayStartPurchase(WorldPackets::BattlePay::StartPurchase& packet);
+		void HandleBattlePayPurchaseProduct(WorldPackets::BattlePay::PurchaseProduct& packet);
+		void HandleBattlePayConfirmPurchase(WorldPackets::BattlePay::ConfirmPurchaseResponse& packet);
+		void HandleBattlePayAckFailedResponse(WorldPackets::BattlePay::BattlePayAckFailedResponse& packet);
+		void SendDisplayPromo(int32 promotionID = 0);
+
 
         void SendFeatureSystemStatusGlueScreen();
 
@@ -1320,7 +1326,7 @@ class WorldSession
         void HandleGMTicketGetCaseStatus(WorldPackets::Ticket::GMTicketGetCaseStatus& packet);
         void HandleSupportTicketSubmitComplaint(WorldPackets::Ticket::SupportTicketSubmitComplaint& packet);
         void HandleSupportTicketSubmitSuggestion(WorldPackets::Ticket::SupportTicketSubmitSuggestion& packet);
-
+		// Social
         void HandleQuickJoinAutoAcceptRequests(WorldPackets::Social::QuickJoinAutoAcceptRequests& packet);
         void HandleQuickJoinRequestInvite(WorldPackets::Social::QuickJoinRequestInvite& packet);
         void HandleQuickJoinRespondToInvite(WorldPackets::Social::QuickJoinRespondToInvite& packet);
@@ -1808,7 +1814,10 @@ class WorldSession
 
         void HandleUpgradeItem(WorldPackets::Item::UpgradeItem& packet);
 
-        void HandleBattlePetSetFlags(WorldPackets::BattlePet::SetFlags& packet);
+		// battle pets handlers
+		void HandleBattlePetRequestJournal(WorldPackets::BattlePet::NullCmsg& packet);
+		
+		void HandleBattlePetSetFlags(WorldPackets::BattlePet::SetFlags& packet);
         void HandleModifyName(WorldPackets::BattlePet::ModifyName& packet);
         void HandleBattlePetNameQuery(WorldPackets::BattlePet::Query& packet);
         void HandleCageBattlePet(WorldPackets::BattlePet::BattlePetGuidRead& packet);
@@ -1821,7 +1830,7 @@ class WorldSession
         void HandlePetBattleFinalNotify(WorldPackets::BattlePet::NullCmsg& packet);
         void HandlePetBattleQuitNotify(WorldPackets::BattlePet::NullCmsg& packet);
         void HandleBattlePetDelete(WorldPackets::BattlePet::BattlePetGuidRead& packet);
-        void HandleBattlePetRequestJournal(WorldPackets::BattlePet::NullCmsg& packet);
+        
         void HandleBattlePetJournalLock(WorldPackets::BattlePet::NullCmsg& packet);
         void HandleJoinPetBattleQueue(WorldPackets::BattlePet::NullCmsg& packet);
         void HandlePetBattleScriptErrorNotify(WorldPackets::BattlePet::NullCmsg& packet);
@@ -1895,11 +1904,8 @@ class WorldSession
         void HandleForcedReactions(WorldPackets::Reputation::RequestForcedReactions& packet);
         void HandleSaveCUFProfiles(WorldPackets::Misc::SaveCUFProfiles& packet);
         void SendLoadCUFProfiles();
-        void HandleBattlePayDistributionAssign(WorldPackets::BattlePay::DistributionAssignToTarget& packet);
-        void HandleBattlePayStartPurchase(WorldPackets::BattlePay::StartPurchase& packet);
-        void HandleBattlePayPurchaseProduct(WorldPackets::BattlePay::PurchaseProduct& packet);
-        void HandleBattlePayConfirmPurchase(WorldPackets::BattlePay::ConfirmPurchaseResponse& packet);
-        void HandleBattlePayAckFailedResponse(WorldPackets::BattlePay::BattlePayAckFailedResponse& packet);
+
+
 
         void HandleGetGarrisonInfo(WorldPackets::Garrison::GetGarrisonInfo& packet);
         void HandleGarrisonPurchaseBuilding(WorldPackets::Garrison::GarrisonPurchaseBuilding& packet);

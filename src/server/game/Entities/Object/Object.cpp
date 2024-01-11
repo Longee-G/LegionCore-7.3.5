@@ -3939,10 +3939,10 @@ ObjectGuid WorldObject::GetTransGUID() const
     return ObjectGuid::Empty;
 }
 
-//! if someone has phaseID but enother has empty - not see any! YES! NOT SEE! FIX2. WHY SHOULD? 
+//! if someone has phaseID but another has empty - not see any! YES! NOT SEE! FIX2. WHY SHOULD? 
 //      FOR SUPPORT OLD STYLE NEED ALLOW TO SEE. FOR SUPER HIDE PHASE ALL SHOULD HAVE SOME PHASEIDs
-//! If some have 1 2 enother has 1 = see each other.
-//! ir some have 1 2 enorther has 3 - not see.
+//! If some have 1 2 another has 1 = see each other.
+//! ir some have 1 2 another has 3 - not see.
 //! if some has ignorePhase id - see each.
 bool WorldObject::InSamePhaseId(std::set<uint32> const& phase, bool otherUsePlayerPhasingRules) const
 {
