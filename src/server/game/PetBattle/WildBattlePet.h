@@ -28,7 +28,7 @@ struct WildBattlePetPool
 
 struct WildPetPoolTemplate
 {
-    uint32 Species{};
+    uint32 Species{};			// 这个是什么写法？
     uint32 BattlePetEntry{};
     uint32 CreatureEntry{};
     uint32 Max{};

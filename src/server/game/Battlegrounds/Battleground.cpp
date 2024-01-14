@@ -2139,6 +2139,9 @@ void Battleground::HandleStartTimer(TimerType type)
     startTimer.Type = type;
     startTimer.TimeRemaining = countdownMaxForBGType - std::chrono::duration_cast<Seconds>(GetElapsedTime());
     startTimer.TotalTime = countdownMaxForBGType;
+
+	// 这个代码有问题-- 不需要发给所有的player...哪个player请求，发给哪个即可...
+
     SendPacketToAll(startTimer.Write());
 }
 

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -334,6 +334,7 @@ void WorldSession::HandleBattlePayPurchaseUnkResponse(WorldPackets::BattlePay::B
     SendPurchaseUpdate(this, *purchaseData, Battlepay::Error::Ok);
 }
 
+// display promotion
 void WorldSession::SendDisplayPromo(int32 promotionID /*= 0*/)
 {
     SendPacket(WorldPackets::BattlePay::DisplayPromotion(promotionID).Write());

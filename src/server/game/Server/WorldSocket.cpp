@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
 * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
 *
@@ -540,6 +540,10 @@ WorldSocket::ReadDataHandlerResult WorldSocket::ReadDataHandler()
 void WorldSocket::LogOpcodeText(OpcodeClient opcode, std::unique_lock<std::mutex> const& guard) const
 {
     #ifdef WIN32
+	// [DEBUG]
+	if (opcode == CMSG_PING || opcode == CMSG_UI_TIME_REQUEST)
+		return;
+
     if (!guard)
         TC_LOG_INFO(LOG_FILTER_OPCODES, "C->S: %s %s conn %i", GetOpcodeNameForLogging(opcode).c_str(), GetRemoteIpAddress().to_string().c_str(), GetConnectionType());
     else
@@ -560,8 +564,8 @@ void WorldSocket::SendPacket(WorldPacket const& packet)
     sPacketLog->LogPacket(packet, SERVER_TO_CLIENT, GetRemoteIpAddress(), GetRemotePort(), GetConnectionType());
 
     #ifdef WIN32
-    if (SMSG_ON_MONSTER_MOVE != static_cast<OpcodeServer>(packet.GetOpcode()))
-        TC_LOG_INFO(LOG_FILTER_OPCODES, "S->C: %s Size %u %s connection %i, connectionType %i", GetOpcodeNameForLogging(static_cast<OpcodeServer>(packet.GetOpcode())).c_str(), packetSize, GetRemoteIpAddress().to_string().c_str(), packet.GetConnection(), GetConnectionType());
+    //if (SMSG_ON_MONSTER_MOVE != static_cast<OpcodeServer>(packet.GetOpcode()))
+    //    TC_LOG_INFO(LOG_FILTER_OPCODES, "S->C: %s Size %u %s connection %i, connectionType %i", GetOpcodeNameForLogging(static_cast<OpcodeServer>(packet.GetOpcode())).c_str(), packetSize, GetRemoteIpAddress().to_string().c_str(), packet.GetConnection(), GetConnectionType());
     #endif
 
     _bufferQueueLock.lock();

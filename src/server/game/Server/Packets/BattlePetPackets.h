@@ -68,6 +68,7 @@ namespace WorldPackets
             void Read() override { }
         };
 
+		// 日志信息？什么东西...
         struct BattlePetJournalInfo
         {
             ObjectGuid BattlePetGUID;
@@ -137,10 +138,10 @@ namespace WorldPackets
             bool HasDeclined = false;
         };
 
-        //< CMSG_BATTLE_PET_DELETE_PET
+        //< CMSG_BATTLE_PET_DELETE_PET			//
         //< CMSG_BATTLE_PET_DELETE_PET_CHEAT
         //< CMSG_BATTLE_PET_SUMMON
-        //< CMSG_CAGE_BATTLE_PET
+        //< CMSG_CAGE_BATTLE_PET				// 抓宠物？
         //< CMSG_PET_BATTLE_QUIT_NOTIFY
         //< CMSG_BATTLE_PET_UPDATE_NOTIFY
         class BattlePetGuidRead final : public ClientPacket

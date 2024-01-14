@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
@@ -77,7 +77,7 @@ m_muteTime(mute_time), m_timeOutTime(0), _countPenaltiesHwid(0), _player(nullptr
 m_playerSave(false), m_sessionDbLocaleIndex(locale), m_latency(0), _tutorialsChanged(false), recruiterId(recruiter), isRecruiter(isARecruiter), timeCharEnumOpcode(0), playerLoginCounter(0), forceExit(false), m_sUpdate(false), wardenModuleFailed(false), atAuthFlag(flag), canLogout(false),
 tokens(accountTokenMap), _referer(referer)
 {
-	// FIXME: ÓÉÓÚLEGION°æ±¾ÊÇ¶íÎÄµÄÊý¾Ý¿â±¾µØ»¯£¬Èç¹û¿Í»§¶ËÊÇzhCN½«»áµ¼ÖÂÊý¾Ý³öÏÖ´íÎó£¬Ç¿ÖÆÉèÖÃlocale=enUS
+	// FIXME: ç”±äºŽLEGIONç‰ˆæœ¬æ˜¯ä¿„æ–‡çš„æ•°æ®åº“æœ¬åœ°åŒ–ï¼Œå¦‚æžœå®¢æˆ·ç«¯æ˜¯zhCNå°†ä¼šå¯¼è‡´æ•°æ®å‡ºçŽ°é”™è¯¯ï¼Œå¼ºåˆ¶è®¾ç½®locale=enUS
 	m_sessionDbLocaleIndex = LOCALE_enUS;
 
     _os = std::move(os);
@@ -235,6 +235,10 @@ void WorldSession::SendPacket(WorldPacket const* packet, bool forced /*= false*/
 
     if ((getMSTime() - start_time) > 50)
         sLog->outDiff(" >> SendPacket DIFF %u player_guid %u _mapID_ %i AccountId %u opcode %u packetSize %u", getMSTime() - start_time, (_player && !_player->IsDelete()) ? _player->GetGUIDLow() : 0, (_player && !_player->IsDelete()) ? _player->GetMapId() : -1, GetAccountId(), opcode, packetSize);
+
+	// FIXME: [DEBUG]	
+	if (opcode != SMSG_EMOTE && opcode != SMSG_PONG && opcode != SMSG_UI_TIME)
+		TC_LOG_INFO(LOG_FILTER_OPCODES, "S->C: %s [%s]", GetOpcodeNameForLogging(static_cast<OpcodeServer>(opcode)).c_str(), GetPlayerName().c_str());
 }
 
 /// Add an incoming packet to the queue
@@ -803,7 +807,7 @@ const char* WorldSession::GetTrinityString(int32 entry) const
     return sObjectMgr->GetTrinityString(entry, GetSessionDbLocaleIndex());
 }
 
-// ÏûÏ¢°üÎ´´¦Àí...
+// æ¶ˆæ¯åŒ…æœªå¤„ç†...
 void WorldSession::Handle_NULL(WorldPackets::Null& null)
 {
     TC_LOG_ERROR(LOG_FILTER_OPCODES, "Received unhandled opcode %s from %s",
@@ -1181,7 +1185,7 @@ void WorldSession::InitializeSessionCallback(SQLQueryHolder* realmHolder, SQLQue
     SendFeatureSystemStatusGlueScreen();
     SendClientCacheVersion(sWorld->getIntConfig(CONFIG_CLIENTCACHE_VERSION));
     SendHotfixList(int32(sWorld->getIntConfig(CONFIG_HOTFIX_CACHE_VERSION)));
-    SendTutorialsData();
+    SendTutorialsData();	
     SendDisplayPromo();
 
     if (PreparedQueryResult characterCountsResult = holder->GetPreparedResult(AccountInfoQueryHolder::GLOBAL_REALM_CHARACTER_COUNTS))

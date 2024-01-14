@@ -22,3 +22,4 @@ nbproject/*
 cmake-build-*/
 .vs
 *.user
+sql/base/LegionCore_world_2020_04_25.sql

@@ -606,6 +606,7 @@ private:
 
 };
 
+// What's LFB ???
 enum LFBUpdateStatus : uint32
 {
     LFB_NONE                                    = 0,

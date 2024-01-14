@@ -445,7 +445,7 @@ void BattlepayManager::SendProductList()
         bool hideProductPrice = false;
         if (pInfo.DisplayInfo.is_initialized() && pInfo.DisplayInfo->Flags.is_initialized())
             hideProductPrice = pInfo.DisplayInfo->Flags.get() & BattlepayDisplayInfoFlag::HidePrice;
-        bool hasEnoughTokens = tokenBalance >= product.CurrentPriceFixedPoint;
+        bool hasEnoughTokens = (uint64)tokenBalance >= product.CurrentPriceFixedPoint;
 
         response.ProductList.ProductInfo.emplace_back(pInfo);
 

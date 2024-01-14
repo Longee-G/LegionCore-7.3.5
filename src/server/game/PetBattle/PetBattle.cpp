@@ -160,6 +160,7 @@ ObjectGuid::LowType BattlePet::AddToPlayer(Player* player)
 {
     AccountID = player->GetSession()->GetAccountId();
     auto guidlow = sObjectMgr->GetGenerator<HighGuid::BattlePet>()->Generate();
+	// 这个Id起什么作用呢？
     JournalID = ObjectGuid::Create<HighGuid::BattlePet>(guidlow);
 
     PreparedStatement* statement = CharacterDatabase.GetPreparedStatement(CHAR_REP_PETBATTLE);
@@ -185,6 +186,7 @@ ObjectGuid::LowType BattlePet::AddToPlayer(Player* player)
     statement->setString(19, DeclinedNames[2]);
     statement->setString(20, DeclinedNames[3]);
     statement->setString(21, DeclinedNames[4]);
+
     CharacterDatabase.Execute(statement);
 
     player->UpdateAchievementCriteria(CRITERIA_TYPE_COLLECT_BATTLEPET, 1);
@@ -240,6 +242,7 @@ void BattlePet::UpdateStats()
     for (size_t i = 0; i < 3; ++i)
         stats[i] = 1000;
 
+	// 获取 breed 对应的3维值（hp,mp,sp)
     for (auto const& v : sBattlePetBreedStateStore)
     {
         if (v->BreedID != Breed)
@@ -260,6 +263,7 @@ void BattlePet::UpdateStats()
         }
     }
 
+	// 加上 species 对应的值...
     for (auto const& v : sBattlePetSpeciesStateStore)
     {
         if (v->SpeciesID != Species)
