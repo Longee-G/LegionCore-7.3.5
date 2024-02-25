@@ -1,13 +1,13 @@
-#include "ScriptedEscortAI.h"
+ï»¿#include "ScriptedEscortAI.h"
 #include "CreatureTextMgr.h"
 #include "MapManager.h"
 #include "ScriptMgr.h"
 #include "GameObjectAI.h"
 #include "SpellAuraEffects.h"
 
-// A£ºÕâÊÇÒ»¸öplayScene¹ØÁªµÄScript...
-// Í¨¹ı `world.spell_scene`±íÀ´¹ØÁª
-// ¹ØÁªµÄpkgIdÊÇ1487£¬sceneId:1106
+// Aï¼šè¿™æ˜¯ä¸€ä¸ªplaySceneå…³è”çš„Script...
+// é€šè¿‡ `world.spell_scene`è¡¨æ¥å…³è”
+// å…³è”çš„pkgIdæ˜¯1487ï¼ŒsceneId:1106
 class sceneTrigger_dh_init : public SceneTriggerScript
 {
 public:
@@ -17,16 +17,16 @@ public:
 	enum data
 	{
 		NPC_CONV = 705,
-		SPELL_CUEILLIDANTH = 191667,		// Devastator Bombardment ÕÙ»½Ò»¿ÅÔÉÊ¯Õ¨×Ô¼º...
+		SPELL_CUEILLIDANTH = 191667,		// Devastator Bombardment å¬å”¤ä¸€é¢—é™¨çŸ³ç‚¸è‡ªå·±...
 	};
 
-	// Ó¦¸ÃÊÇµ±player½øÈëAreaTriggerµÄÊ±ºò´¥·¢µÄ£¿
+	// åº”è¯¥æ˜¯å½“playerè¿›å…¥AreaTriggerçš„æ—¶å€™è§¦å‘çš„ï¼Ÿ
 
 	bool OnTrigger(Player* player, SpellScene const* /*trigger*/, std::string type) override
 	{
-		// Q:Õâ¸ötypeÊÇ¶¨ÒåÔÚÊ²Ã´µØ·½µÄ£¿
-		// A£º ´Ó¿Í»§¶ËÏûÏ¢À´µÄ CMSG_SCENE_TRIGGER_EVENT ...
-		// Ò²¾ÍÊÇËµÕâ¸öº¯ÊıÓ¦¸ÃÊÇ³öÀ´ playSceneµÄeventµÄ ...
+		// Q:è¿™ä¸ªtypeæ˜¯å®šä¹‰åœ¨ä»€ä¹ˆåœ°æ–¹çš„ï¼Ÿ
+		// Aï¼š ä»å®¢æˆ·ç«¯æ¶ˆæ¯æ¥çš„ CMSG_SCENE_TRIGGER_EVENT ...
+		// ä¹Ÿå°±æ˜¯è¯´è¿™ä¸ªå‡½æ•°åº”è¯¥æ˜¯å‡ºæ¥ playSceneçš„eventçš„ ...
 
 		if (type == "CUEILLIDANTH")
 		{
@@ -34,16 +34,16 @@ public:
 			Conversation* conversation = new Conversation;
 			if (!conversation->CreateConversation(sObjectMgr->GetGenerator<HighGuid::Conversation>()->Generate(), NPC_CONV, player, NULL, *player))
 				delete conversation;
-			// q: 40076ÈÎÎñÊÇÊ²Ã´£¿	
-			// a: dh µÄÇ°ÖÃÈÎÎñ£¿ 
+			// q: 40076ä»»åŠ¡æ˜¯ä»€ä¹ˆï¼Ÿ	
+			// a: dh çš„å‰ç½®ä»»åŠ¡ï¼Ÿ 
 			player->CompleteQuest(40076);
 		}
 		return true;
 	}
 };
 
-// GO-244898£¬Õâ¸öGOºÃÏñÊÇLegionCore×Ô¼º¶¨ÒåµÄ...
-// Quest-40077 µÄÈÎÎñGO£¬½»»¥½øĞĞ²åÆì
+// GO-244898ï¼Œè¿™ä¸ªGOå¥½åƒæ˜¯LegionCoreè‡ªå·±å®šä¹‰çš„...
+// Quest-40077 çš„ä»»åŠ¡GOï¼Œäº¤äº’è¿›è¡Œæ’æ——
 
 class go_q40077 : public GameObjectScript
 {
@@ -59,7 +59,7 @@ public:
 
 		enum data
 		{
-			SCENE = 191677,	// ÉÕµô¾üÍÅÆìÖÄºóµÄ³¡¾°¶¯»­
+			SCENE = 191677,	// çƒ§æ‰å†›å›¢æ——å¸œåçš„åœºæ™¯åŠ¨ç”»
 		};
 
 		bool GossipHello(Player* player) override
@@ -78,7 +78,7 @@ public:
 			// quest: The Invasion Begins
 			if (player->GetQuestStatus(40077) == QUEST_STATUS_INCOMPLETE)
 			{
-				player->CastSpell(player, SCENE, true);	// ²¥·Å²åÆì¶¯»­³¡¾°..
+				player->CastSpell(player, SCENE, true);	// æ’­æ”¾æ’æ——åŠ¨ç”»åœºæ™¯..
 				player->KillCreditGO(go->GetEntry(), go->GetGUID());
 				return true;
 			}
@@ -96,7 +96,7 @@ public:
 
 //93011
 // npc with quest:40077 the starting quest in mardum
-// npc Kayn Sunfury µÄ½Å±¾..
+// npc Kayn Sunfury çš„è„šæœ¬..
 class npc_q40077 : public CreatureScript
 {
 public:
@@ -120,10 +120,10 @@ public:
 			if (!conversation->CreateConversation(sObjectMgr->GetGenerator<HighGuid::Conversation>()->Generate(), NPC_CONV, player, NULL, *player))
 				delete conversation; */
 
-				// 93011 -- Kayn Sunfury  ÎªÊ²Ã´ÒªÕÙ»½×Ô¼º£¿
-				// ÕÙ»½Ò»¸öĞÂµÄnpc³öÀ´ 
+				// 93011 -- Kayn Sunfury  ä¸ºä»€ä¹ˆè¦å¬å”¤è‡ªå·±ï¼Ÿ
+				// å¬å”¤ä¸€ä¸ªæ–°çš„npcå‡ºæ¥ 
 
-				// µ±½ÓÁËÈÎÎñÖ®ºó£¬playerµÄÏàÎ»·¢Éú±ä»¯£¬»á¿´²»¼ûµ±Ç°ÕâĞ©npc£¬Òò´ËĞèÒªÕÙ»½³öÒ»×éĞÂµÄ..
+				// å½“æ¥äº†ä»»åŠ¡ä¹‹åï¼Œplayerçš„ç›¸ä½å‘ç”Ÿå˜åŒ–ï¼Œä¼šçœ‹ä¸è§å½“å‰è¿™äº›npcï¼Œå› æ­¤éœ€è¦å¬å”¤å‡ºä¸€ç»„æ–°çš„..
 
 			player->SummonCreature(93011, creature->GetPositionX(),
 				creature->GetPositionY(), creature->GetPositionZ(), 1.64f, TEMPSUMMON_MANUAL_DESPAWN, 0, player->GetGUID(), NULL);
@@ -149,7 +149,7 @@ public:
 		uint32 timer;
 		bool movein;
 
-		// ±»ÕÙ»½³öÀ´...
+		// è¢«å¬å”¤å‡ºæ¥...
 		void IsSummonedBy(Unit* summoner) override
 		{
 			Player* player = summoner->ToPlayer();
@@ -160,9 +160,9 @@ public:
 
 			me->AddPlayerInPersonnalVisibilityList(summoner->GetGUID());
 
-			// Ê¹ÓÃKaynµÄClone ÕÙ»½Ò»¶ÓÁÙÊ±µÄnpc ...
-			// ÎªÊ²Ã´KaynÒÆ¶¯µÄÊ±ºò£¬ËûÕÙ»½µÄnpcÒ²¸ú×ÅÒÆ¶¯£¿
-			// ÆäËûµÄnpcÓÉ½Å±¾ `npc_q40077_1` Çı¶¯..
+			// ä½¿ç”¨Kaynçš„Clone å¬å”¤ä¸€é˜Ÿä¸´æ—¶çš„npc ...
+			// ä¸ºä»€ä¹ˆKaynç§»åŠ¨çš„æ—¶å€™ï¼Œä»–å¬å”¤çš„npcä¹Ÿè·Ÿç€ç§»åŠ¨ï¼Ÿ
+			// å…¶ä»–çš„npcç”±è„šæœ¬ `npc_q40077_1` é©±åŠ¨..
 			me->SummonCreature(98228, 1182.35f, 3202.90f, 52.60f, 2.28f, TEMPSUMMON_MANUAL_DESPAWN, 0, player->GetGUID(), NULL);
 			me->SummonCreature(98227, 1177.00f, 3203.07f, 52.44f, 1.29f, TEMPSUMMON_MANUAL_DESPAWN, 0, player->GetGUID(), NULL);
 			me->SummonCreature(99918, 1172.92f, 3207.82f, 52.47f, 5.89f, TEMPSUMMON_MANUAL_DESPAWN, 0, player->GetGUID(), NULL);
@@ -171,7 +171,7 @@ public:
 
 			player->GetMap()->LoadGrid(1170.74f, 3204.71f); //voice
 
-			// ´´½¨¶Ô»°...
+			// åˆ›å»ºå¯¹è¯...
 			Conversation* conversation = new Conversation;
 			if (!conversation->CreateConversation(sObjectMgr->GetGenerator<HighGuid::Conversation>()->Generate(), NPC_CONV, player, NULL, *player))
 				delete conversation;
@@ -183,10 +183,10 @@ public:
 			{
 				if (timer <= diff)
 				{
-					// Õâ¸öÂ·¾¶ÊÇLegionCore×Ô¼º¶¨ÒåµÄ..
+					// è¿™ä¸ªè·¯å¾„æ˜¯LegionCoreè‡ªå·±å®šä¹‰çš„..
 					me->GetMotionMaster()->MovePath(10267107, false);
 					movein = false;
-					// 17sºóÏûÊ§...
+					// 17såæ¶ˆå¤±...
 					me->DespawnOrUnsummon(17000);
 				}
 				else timer -= diff;
@@ -196,6 +196,7 @@ public:
 
 };
 
+// å‡¯æ©Â·æ—¥æ€’çš„6äººå°é˜Ÿè·‘è¿›ç»æœ›å²­...
 class npc_q40077_1 : public CreatureScript
 {
 public:
@@ -250,7 +251,7 @@ public:
 					default:
 						break;
 					}
-					// ÕâĞ©pathÊÇLegionCore×Ô¼º¶¨ÒåµÄ...
+					// è¿™äº›pathæ˜¯LegionCoreè‡ªå·±å®šä¹‰çš„...
 					me->GetMotionMaster()->MovePath(path, false);
 					me->DespawnOrUnsummon(17000);
 					movein = false;
@@ -286,7 +287,7 @@ public:
 			*/
 			player->Dismount();
 			player->KilledMonsterCredit(88872);
-			player->CastSpell(player, SCENE, true);	// ²¥·Å¶¯»­£¬ÕÙ»½»ÒÉà²¿¶Ó ...
+			player->CastSpell(player, SCENE, true);	// æ’­æ”¾åŠ¨ç”»ï¼Œå¬å”¤ç°èˆŒéƒ¨é˜Ÿ ...
 
 			player->SummonCreature(99916, 1023.25f, 2849.71f, 5.42f, 1.75f, TEMPSUMMON_MANUAL_DESPAWN, 0, player->GetGUID(), NULL);
 			//    sayer->AddPlayerInPersonnalVisibilityList(player->GetGUID());
@@ -316,9 +317,9 @@ after OBJECT_FIELD_DYNAMIC_FLAGS: 2473853184
 // GO-244439, 244440, 244441, 243873
 // Legion Communicator
 //
-// Ö§ÏßÈÎÎñµÄGO£¬½»»¥¿ÉÒÔÔö¼ÓÈÎÎñµÄÍê³É¶È...
+// æ”¯çº¿ä»»åŠ¡çš„GOï¼Œäº¤äº’å¯ä»¥å¢åŠ ä»»åŠ¡çš„å®Œæˆåº¦...
 //
-// *************** Õâ¸öACoreÃ»ÓĞÊµÏÖ **************
+// *************** è¿™ä¸ªACoreæ²¡æœ‰å®ç° **************
 class go_q39279 : public GameObjectScript
 {
 public:
@@ -342,11 +343,11 @@ public:
 			NPC_CONV_GO_244440 = 583,
 		};
 
-		// GossipUse ºÍ GossipHelloÓĞÊ²Ã´²»Í¬ÄØ£¿
+		// GossipUse å’Œ GossipHelloæœ‰ä»€ä¹ˆä¸åŒå‘¢ï¼Ÿ
 
 		bool GossipUse(Player* player) override
 		{
-			// Õâ¸öÊÇÓÃÀ´¼ì²éÈÎÎñÄ¿±êµÄÍê³É¼ÆÊı...
+			// è¿™ä¸ªæ˜¯ç”¨æ¥æ£€æŸ¥ä»»åŠ¡ç›®æ ‡çš„å®Œæˆè®¡æ•°...
 			if (player->GetReqKillOrCastCurrentCount(QUEST, go->GetEntry()))
 				return true;
 
@@ -357,7 +358,7 @@ public:
 			if (player->GetReqKillOrCastCurrentCount(QUEST, go->GetEntry()))
 				return true;
 
-			// ºÍ²»Í¬µÄÍ¨ĞÅÆ÷½»»¥£¬ÏÔÊ¾²»Í¬µÄ¶Ô»°...
+			// å’Œä¸åŒçš„é€šä¿¡å™¨äº¤äº’ï¼Œæ˜¾ç¤ºä¸åŒçš„å¯¹è¯...
 			switch (go->GetEntry())
 			{
 			case GO_244439:
@@ -400,7 +401,11 @@ conv - 581
 
 // Destroying Fel Spreader - 191827
 //
-// Ê¹ÓÃSpell´İ»ÙĞ°ÈĞÉ¶¶«Î÷£¿ ÅçÈ÷Æ÷£¿ ¸¡ÔÚ¿ØÖÆµÄÂÌÉ«µÄËó×´Æ÷Ğµ
+// ä½¿ç”¨Spellæ‘§æ¯é‚ªåˆƒå•¥ä¸œè¥¿ï¼Ÿ å–·æ´’å™¨ï¼Ÿ æµ®åœ¨æ§åˆ¶çš„ç»¿è‰²çš„æ¢­çŠ¶å™¨æ¢°
+// Q:Spell æ˜¯æ€ä¹ˆè§¦å‘castçš„ï¼Ÿ
+// A: é€šè¿‡ SpellEvent æ¥è§¦å‘çš„19
+// Fel Spreader - 97142 ... è¿™ä¸æ˜¯ä¸€ä¸ªGOï¼Œè€Œæ˜¯ä¸€ä¸ªCreatureæ•°æ® ...
+// è¿™ä¸ªæ˜¯é€šè¿‡`npc_spellclick_spells`è¡¨æ¥å°†npcå’Œspellè¿›è¡Œå…³è”çš„ ...
 class spell_legion_q39279 : public SpellScriptLoader
 {
 public:
@@ -484,12 +489,12 @@ public:
 
 		void Reset() override
 		{
-			// ÓÃÄ§·¨¿ØÖÆÒ»¸önpc£¬ºÃÏñ²»ĞèÒªÕâ¸ö´úÂëÒ²ÄÜÊµÏÖ...
+			// ç”¨é­”æ³•æ§åˆ¶ä¸€ä¸ªnpcï¼Œå¥½åƒä¸éœ€è¦è¿™ä¸ªä»£ç ä¹Ÿèƒ½å®ç°...
 			if (Creature* target = me->FindNearestCreature(105316, 40.0f))
 				me->CastSpell(target, 188437, true); // visual
 		}
 
-		// ¿¿½ünpc¾ÍÈÃÈÎÎñÍê³É ...
+		// é è¿‘npcå°±è®©ä»»åŠ¡å®Œæˆ ...
 
 		void MoveInLineOfSight(Unit* who) override
 		{
@@ -505,7 +510,7 @@ public:
 
 			player->KilledMonsterCredit(me->GetEntry());
 
-			// ÈÃnpc½øĞĞËµ»°...
+			// è®©npcè¿›è¡Œè¯´è¯...
 
 			sCreatureTextMgr->SendChat(me, 0, player->GetGUID());
 			return;
@@ -515,7 +520,7 @@ public:
 		{
 			if (timer <= diff)
 			{
-				// ¸ôÒ»¶ÎÊ±¼ä¾ÍÊ©·ÅÄ§·¨...
+				// éš”ä¸€æ®µæ—¶é—´å°±æ–½æ”¾é­”æ³•...
 				if (Creature* target = me->FindNearestCreature(105316, 40.0f))
 					me->CastSpell(target, 188437, true); // visual
 
@@ -527,8 +532,13 @@ public:
 	};
 };
 
-// ½øĞĞº°»°¹ã²¥£¿ °ó¶¨ÔÚÊ²Ã´npcÉÏÂğ
-// ºÃÏñÊÇ°ó¶¨ÔÚ¹ÖÎïÉÏµÄ...
+// 101748 - Fel Geyser			é‚ªèƒ½å–·æ³‰
+// 101781 - Spider Scene Stalker Controller		èœ˜è››æ§åˆ¶å™¨ ..
+
+// è¿›è¡Œå–Šè¯å¹¿æ’­ï¼Ÿ ç»‘å®šåœ¨ä»€ä¹ˆnpcä¸Šå—
+// å¥½åƒæ˜¯ç»‘å®šåœ¨æ€ªç‰©ä¸Šçš„...
+// å½“playeræ»¡è¶³æ¡ä»¶çš„æ—¶å€™ï¼Œæ’­æ”¾Conversation..
+
 class conversation_announcer : public CreatureScript
 {
 public:
@@ -586,6 +596,9 @@ public:
 
 			if (!me->IsWithinDistInMap(who, 100.0f))
 				return;
+
+			// å½“playerç§»åŠ¨åˆ°npcçš„è§†çº¿å†…çš„æ—¶å€™ï¼Œè§¦å‘äº‹ä»¶ ...
+
 
 			uint32 eTimer = 1000;
 			/*
@@ -770,15 +783,15 @@ public:
 					break;
 				case EVENT_2:
 				{
-					float radius = 5.0f; // §â§Ñ§ã§ä§à§ñ§ß§Ú§Ö §à§ä §Ü§Ñ§ã§ä§Ö§â§Ñ
-					float coneAngle = 0.0f; // §å§Ô§à§İ §Ü§å§Õ§Ñ §á§à§ã§ä§Ñ§Ó§Ú§ä§ã§ñ §Ş§à§Ò §ã §¡§´
+					float radius = 5.0f; // Ñ€Ğ°ÑÑ‚Ğ¾ÑĞ½Ğ¸Ğµ Ğ¾Ñ‚ ĞºĞ°ÑÑ‚ĞµÑ€Ğ°
+					float coneAngle = 0.0f; // ÑƒĞ³Ğ¾Ğ» ĞºÑƒĞ´Ğ° Ğ¿Ğ¾ÑÑ‚Ğ°Ğ²Ğ¸Ñ‚ÑÑ Ğ¼Ğ¾Ğ± Ñ ĞĞ¢
 					Position position;
 					me->GetNearPosition(position, radius, coneAngle);
 					me->CastSpell(position.GetPositionX(), position.GetPositionY(), position.GetPositionZ(), 195061, true);
-					coneAngle = 2.0f; // §å§Ô§à§İ §Ü§å§Õ§Ñ §á§à§ã§ä§Ñ§Ó§Ú§ä§ã§ñ §Ş§à§Ò §ã §¡§´
+					coneAngle = 2.0f; // ÑƒĞ³Ğ¾Ğ» ĞºÑƒĞ´Ğ° Ğ¿Ğ¾ÑÑ‚Ğ°Ğ²Ğ¸Ñ‚ÑÑ Ğ¼Ğ¾Ğ± Ñ ĞĞ¢
 					me->GetNearPosition(position, radius, coneAngle);
 					me->CastSpell(position.GetPositionX(), position.GetPositionY(), position.GetPositionZ(), 195061, true);
-					coneAngle = 4.0f; // §å§Ô§à§İ §Ü§å§Õ§Ñ §á§à§ã§ä§Ñ§Ó§Ú§ä§ã§ñ §Ş§à§Ò §ã §¡§´
+					coneAngle = 4.0f; // ÑƒĞ³Ğ¾Ğ» ĞºÑƒĞ´Ğ° Ğ¿Ğ¾ÑÑ‚Ğ°Ğ²Ğ¸Ñ‚ÑÑ Ğ¼Ğ¾Ğ± Ñ ĞĞ¢
 					me->GetNearPosition(position, radius, coneAngle);
 					me->CastSpell(position.GetPositionX(), position.GetPositionY(), position.GetPositionZ(), 195061, true);
 				}
@@ -880,7 +893,7 @@ public:
 };
 
 // 99914 Ashtongue Mystic
-// Õâ¸ö½Å±¾ÎªÁËÏ×¼À»ÒÉà·¨Ê¦À´¿ªÆô¼¤»îÆ÷£¬ºÍnpc¶Ô»°ºó£¬npcÏ×¼À×Ô¼º
+// è¿™ä¸ªè„šæœ¬ä¸ºäº†çŒ®ç¥­ç°èˆŒæ³•å¸ˆæ¥å¼€å¯æ¿€æ´»å™¨ï¼Œå’Œnpcå¯¹è¯åï¼ŒnpcçŒ®ç¥­è‡ªå·±
 class npc_q40379 : public CreatureScript
 {
 public:
@@ -915,7 +928,7 @@ public:
 	}
 };
 
-// ºÍGO½»»¥£¬ÕÙ»½µÚ2Ö»Îä×°²¿·Ö...
+// å’ŒGOäº¤äº’ï¼Œå¬å”¤ç¬¬2åªæ­¦è£…éƒ¨åˆ†...
 class go_q40379 : public GameObjectScript
 {
 public:
@@ -988,7 +1001,7 @@ public:
 			if (player->GetQuestStatus(QUEST) == QUEST_STATUS_INCOMPLETE)
 			{
 				player->KilledMonsterCredit(CREDIT);
-				// Í¨¹ıµÀ¾ß¿´Öëºó
+				// é€šè¿‡é“å…·çœ‹è››å
 				player->CastSpell(player, SPELL, false);
 			}
 			return false;
@@ -1018,12 +1031,12 @@ public:
 	{
 		if (player->GetQuestStatus(QUEST) == QUEST_STATUS_INCOMPLETE && !player->GetReqKillOrCastCurrentCount(QUEST, creature->GetEntry()))
 		{
-			// Õâ¸öÊÇÉ¶£¿ÁÙÊ±´´½¨¶Ô»°²Ëµ¥Âğ£¿
-			// µÚ3¸öÎä×°²¿¶ÓÇ°ÖÃ£¬Ï×¼À×Ô¼º¼¤»î»òÕßÏ×¼ÀSevis
+			// è¿™ä¸ªæ˜¯å•¥ï¼Ÿä¸´æ—¶åˆ›å»ºå¯¹è¯èœå•å—ï¼Ÿ
+			// ç¬¬3ä¸ªæ­¦è£…éƒ¨é˜Ÿå‰ç½®ï¼ŒçŒ®ç¥­è‡ªå·±æ¿€æ´»æˆ–è€…çŒ®ç¥­Sevis
 
 			player->ADD_GOSSIP_ITEM_DB(19016, 0, GOSSIP_SENDER_MAIN, 2);
 			player->ADD_GOSSIP_ITEM_DB(19016, 1, GOSSIP_SENDER_MAIN, 1);
-			// ·¢ÏûÏ¢¸ø¿Í»§¶Ë¸üĞÂ¶Ô»°²Ëµ¥£¿
+			// å‘æ¶ˆæ¯ç»™å®¢æˆ·ç«¯æ›´æ–°å¯¹è¯èœå•ï¼Ÿ
 			player->SEND_GOSSIP_MENU(27770, creature->GetGUID());
 		}
 		return true;
@@ -1036,12 +1049,12 @@ public:
 		switch (action)
 		{
 		case 1:
-			player->ADD_GOSSIP_ITEM_DB(19132, 0, GOSSIP_SENDER_MAIN, 3);  // §Ş§Ö§ß§ñ
+			player->ADD_GOSSIP_ITEM_DB(19132, 0, GOSSIP_SENDER_MAIN, 3);  // Ğ¼ĞµĞ½Ñ
 			player->ADD_GOSSIP_ITEM_DB(19132, 1, GOSSIP_SENDER_MAIN, 4);
 			player->SEND_GOSSIP_MENU(27999, creature->GetGUID());
 			break;
 		case 2:
-			player->ADD_GOSSIP_ITEM_DB(19133, 0, GOSSIP_SENDER_MAIN, 5);  // §Ö§Ô§à
+			player->ADD_GOSSIP_ITEM_DB(19133, 0, GOSSIP_SENDER_MAIN, 5);  // ĞµĞ³Ğ¾
 			player->ADD_GOSSIP_ITEM_DB(19133, 1, GOSSIP_SENDER_MAIN, 4);
 			player->SEND_GOSSIP_MENU(28000, creature->GetGUID());
 			break;
@@ -1061,7 +1074,7 @@ public:
 			player->CLOSE_GOSSIP_MENU();
 			break;
 		case 5:
-			// Ï×¼ÀSevisµÄÁé»ê£¬¼¤»î
+			// çŒ®ç¥­Sevisçš„çµé­‚ï¼Œæ¿€æ´»
 			sCreatureTextMgr->SendChat(creature, 1, player->GetGUID());
 			player->CastSpell(creature, SPELL_1, false);
 			// Talk
@@ -1099,7 +1112,7 @@ public:
 				me->DespawnOrUnsummon();
 		}
 
-		// ÒÆµ½µ½ÊÓÏßÄÚ...
+		// ç§»åˆ°åˆ°è§†çº¿å†…...
 		void MoveInLineOfSight(Unit* who) override
 		{
 			if (who->GetTypeId() != TYPEID_PLAYER || !me->IsWithinDistInMap(who, 15.0f))
@@ -1215,7 +1228,7 @@ public:
 };
 
 //93221 Doom Commander Beliash
-// ÊµÏÖÒ»¸ömonsterµÄAI
+// å®ç°ä¸€ä¸ªmonsterçš„AI
 class npc_q93221_beliash : public CreatureScript
 {
 public:
@@ -1328,7 +1341,7 @@ public:
 };
 
 //96441 Fel Lord Caza
-// ÈÎÎñ¹ÖµÄAI£¬»÷É±Íê³ÉÈÎÎñ
+// ä»»åŠ¡æ€ªçš„AIï¼Œå‡»æ€å®Œæˆä»»åŠ¡
 class npc_q39495_caza : public CreatureScript
 {
 public:
@@ -1899,7 +1912,7 @@ public:
 	};
 };
 
-// ÖëºóÖ®Ò§ 197486,±»ÖëºóÌ©À¼ÄÈÒ§ÁË
+// è››åä¹‹å’¬ 197486,è¢«è››åæ³°å…°å¨œå’¬äº†
 class spell_legion_197486 : public SpellScriptLoader
 {
 public:
@@ -2122,7 +2135,7 @@ public:
 			QUEST = 38729,
 			CREDIT = 100651,
 		};
-		// ºÍkeystone½»»¥ºóÍê³ÉÈÎÎñ...
+		// å’Œkeystoneäº¤äº’åå®Œæˆä»»åŠ¡...
 		bool GossipHello(Player* player) override
 		{
 			if (player->GetReqKillOrCastCurrentCount(QUEST, CREDIT))
@@ -2331,7 +2344,7 @@ public:
 	{
 		npc_q40379_1AI(Creature* creature) : ScriptedAI(creature) {}
 
-		// ´ÓnpcÄÄ½ÓÁËÈÎÎñÖ®ºó£¬npcËµÍê»°£¬¾ÍÆïÂíÅÜÁË
+		// ä»npcå“ªæ¥äº†ä»»åŠ¡ä¹‹åï¼Œnpcè¯´å®Œè¯ï¼Œå°±éª‘é©¬è·‘äº†
 
 		void IsSummonedBy(Unit* summoner) override
 		{
@@ -2339,7 +2352,7 @@ public:
 			{
 				sCreatureTextMgr->SendChat(me, 0, summoner->GetGUID());
 				me->Mount(64385);
-				me->GetMotionMaster()->MovePath(10267113, false);	// Â·¾¶
+				me->GetMotionMaster()->MovePath(10267113, false);	// è·¯å¾„
 				me->DespawnOrUnsummon(10000);
 			}
 			else
@@ -2364,7 +2377,7 @@ public:
 
 		GuidSet m_player_for_event;
 
-		// µ±player¿¿½ünpcµÄÊ±ºò£¬npc½øĞĞËµ»°
+		// å½“playeré è¿‘npcçš„æ—¶å€™ï¼Œnpcè¿›è¡Œè¯´è¯
 
 		void MoveInLineOfSight(Unit* who) override
 		{

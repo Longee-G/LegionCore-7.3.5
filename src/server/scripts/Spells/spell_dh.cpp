@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -1587,9 +1587,9 @@ class spell_dh_ss : public AuraScript
                 if (GetId() == 178940)
                 {
                     if (target->GetCreatureType() == CREATURE_TYPE_DEMON)
-                        caster->CastSpell(caster, 237867, true);
+                        caster->CastSpell(caster, 237867, true);	// Shattered Souls
                     else
-                        caster->CastSpell(caster, 209651, true);
+                        caster->CastSpell(caster, 209651, true);	// Shattered Souls
                 }
                 else if (GetId() == 204254)
                 {
