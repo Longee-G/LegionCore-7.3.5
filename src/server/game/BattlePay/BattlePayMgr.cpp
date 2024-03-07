@@ -358,11 +358,12 @@ void BattlepayManager::SendProductList()
 
     for (auto& itr : sBattlePayDataStore->GetProductGroups())
     {
-        if (!player && itr.IngameOnly)
+        if (!player && itr.IngameOnly)	// 如果没有进入游戏，过滤掉只在游戏中显示的数据
             continue;
 
-        if (itr.OwnsTokensOnly && _session->GetTokenBalance(itr.TokenType) <= 0)
+        if (itr.OwnsTokensOnly && _session->GetTokenBalance(itr.TokenType) <= 0)	// 过滤掉没关联资产的数据中
             continue;
+
 
         WorldPackets::BattlePay::BattlePayProductGroup pGroup;
         pGroup.GroupID = itr.GroupID;
@@ -397,7 +398,7 @@ void BattlepayManager::SendProductList()
         sEntry.ProductID = itr.ProductID;
         sEntry.Ordering = itr.Ordering;
         sEntry.VasServiceType = itr.Flags;
-        sEntry.StoreDeliveryType = itr.BannerType;
+        sEntry.StoreDeliveryType = itr.BannerType;		// 商品交货类型 ...
 
         auto data = WriteDisplayInfo(itr.DisplayInfoID, localeIndex);
         if (std::get<0>(data))
