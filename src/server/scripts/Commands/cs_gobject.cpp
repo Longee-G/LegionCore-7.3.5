@@ -475,6 +475,7 @@ public:
         object->SetWorldRotationAngles(oz, oy, ox);
         object->DestroyForNearbyPlayers();
         object->UpdateObjectVisibility();
+		object->SetRespawnTime(3);
 
         object->SaveToDB();
         object->Refresh();
@@ -509,36 +510,41 @@ public:
         char* toY = strtok(NULL, " ");
         char* toZ = strtok(NULL, " ");
 
+		float x, y, z;
+
         if (!toX)
         {
             Player* player = handler->GetSession()->GetPlayer();
-            object->Relocate(player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), object->GetOrientation());
-            object->DestroyForNearbyPlayers();
-            object->UpdateObjectVisibility();
+			x = player->GetPositionX();
+			y = player->GetPositionY();
+			z = player->GetPositionZ();
         }
         else
         {
             if (!toY || !toZ)
                 return false;
 
-            float x = (float)atof(toX);
-            float y = (float)atof(toY);
-            float z = (float)atof(toZ);
-
-            if (!MapManager::IsValidMapCoord(object->GetMapId(), x, y, z))
-            {
-                handler->PSendSysMessage(LANG_INVALID_TARGET_COORD, x, y, object->GetMapId());
-                handler->SetSentErrorMessage(true);
-                return false;
-            }
-
-            object->Relocate(x, y, z, object->GetOrientation());
-            object->DestroyForNearbyPlayers();
-            object->UpdateObjectVisibility();
+            x = (float)atof(toX);
+            y = (float)atof(toY);
+            z = (float)atof(toZ);
         }
 
-        object->SaveToDB();
-        object->Refresh();
+		if (!MapManager::IsValidMapCoord(object->GetMapId(), x, y, z))
+		{
+			handler->PSendSysMessage(LANG_INVALID_TARGET_COORD, x, y, object->GetMapId());
+			handler->SetSentErrorMessage(true);
+			return false;
+		}
+
+		// remove old from client ? it really work?
+		object->DestroyForNearbyPlayers();
+		object->RelocateStationaryPosition(x, y, z, object->GetOrientation());
+		object->GetMap()->GameObjectRelocation(object, x, y, z, object->GetOrientation());
+
+		object->SetRespawnTime(3);
+		//object->UpdateObjectVisibility();
+        object->SaveToDB();        
+		//object->Refresh();
 
         handler->PSendSysMessage(LANG_COMMAND_MOVEOBJMESSAGE, object->GetGUID().GetGUIDLow(), object->GetGOInfo()->name.c_str(), object->GetGUID().GetGUIDLow());
 
@@ -633,14 +639,23 @@ public:
         uint32 displayId = 0;
         std::string name;
         uint32 lootId = 0;
+		GameObject const* go = nullptr;
+
+		std::ostringstream ss;
+		std::string guid;
+		std::string coord;
+
 
         if (!*args)
         {
-            if (WorldObject* object = handler->getSelectedObject())
-                entry = object->GetEntry();
-            else
-                entry = atoi((char*)args);
+			if (WorldObject* object = handler->getSelectedObject())
+			{
+				entry = object->GetEntry();
+				go = object->ToGameObject();
+			}	
         }
+		else
+			entry = atoi((char*)args);
 
         GameObjectTemplate const* gameObjectInfo = sObjectMgr->GetGameObjectTemplate(entry);
 
@@ -653,6 +668,14 @@ public:
         lootId = gameObjectInfo->GetLootId();
 
         handler->PSendSysMessage(LANG_GOINFO_ENTRY, entry);
+		//handler->PSendSysMessage("Db Guid: %u", );
+		if (go)
+		{
+			handler->PSendSysMessage("Db Guid: %u", go->GetDBTableGUIDLow());
+			handler->PSendSysMessage("Coord: %.2f, %.2f, %.2f", 
+				go->GetPosition().GetPositionX(), go->GetPosition().GetPositionY(), go->GetPosition().GetPositionZ());
+		}
+
         handler->PSendSysMessage(LANG_GOINFO_TYPE, type);
         handler->PSendSysMessage(LANG_GOINFO_LOOTID, lootId);
         handler->PSendSysMessage(LANG_GOINFO_DISPLAYID, displayId);

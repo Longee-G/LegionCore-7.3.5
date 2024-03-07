@@ -8,6 +8,8 @@
 
 #include "WowTime.hpp"
 // #include <my_getopt.h>
+#include <ctime>
+#include "Util.h"
 
 using namespace MS::Utilities;
 
@@ -314,7 +316,10 @@ void WowTime::SetUTCTimeFromPosixTime(time_t posixTime)
     tm timeInfo{};
 
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
+	// use UTC time
     gmtime_s(&timeInfo, &posixTime);
+	// use local item
+	//localtime_r(&posixTime, &timeInfo);
 #else
     gmtime_r(&posixTime, &timeInfo); // POSIX  
 #endif

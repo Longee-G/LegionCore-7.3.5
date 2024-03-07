@@ -676,6 +676,7 @@ public:
 };
 
 //93105  Inquisitor Baleful
+// 任务怪的脚本  ，这个AI 不好打
 class npc_q39049 : public CreatureScript
 {
 public:
@@ -818,7 +819,7 @@ public:
 };
 
 //242989 244916 242987 242990
-// Jailer Cage
+// Jailer Cage 笼子，用来完成解救任务
 class go_q38759 : public GameObjectScript
 {
 public:

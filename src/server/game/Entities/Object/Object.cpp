@@ -3957,11 +3957,12 @@ bool WorldObject::InSamePhaseId(std::set<uint32> const& phase, bool otherUsePlay
     if (phase.empty() && m_phaseId.empty())
         return true;
 
-    if (usePlayerPhasingRules && phase.empty())
-        return true;
+	// FIXME: 以下的两个判断会导致看到不该看的object
+    //if (usePlayerPhasingRules && phase.empty())
+    //    return true;
 
-    if (otherUsePlayerPhasingRules && m_phaseId.empty())
-        return true;
+    //if (otherUsePlayerPhasingRules && m_phaseId.empty())
+    //    return true;
 
     //! speed up case. should be done in any way. 
     // As iteration not check empty data but it should be done.
