@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -208,8 +208,10 @@ public:
             object->SetRespawnTime(value);
         }
 
+		
+
         // fill the gameobject data and save to the db
-        object->SaveToDB(map->GetId(), (UI64LIT(1) << map->GetSpawnMode()), player->GetPhaseMgr().GetPhaseMaskForSpawn());
+        object->SaveToDB(map->GetId(), (UI64LIT(1) << map->GetSpawnMode()), player->GetPhaseMgr().GetPhaseMaskForSpawn(), player->GetPhases());
         delete object;
 
         object = sObjectMgr->IsStaticTransport(objectInfo->entry) ? new StaticTransport : new GameObject;
